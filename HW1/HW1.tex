@@ -1,0 +1,348 @@
+\documentclass[11pt,a4paper]{ctexart}
+%以下为所使用的宏包
+\usepackage{ulem}%下划线
+\usepackage{amsmath,amsfonts,amssymb,amsthm,amsbsy}%数学符号
+\usepackage{graphicx}%插入图片
+\usepackage{booktabs}%三线表
+%\usepackage{indentfirst}%首行缩进
+\usepackage{tikz}%作图
+\usepackage{appendix}%附录
+\usepackage{array}%多行公式/数组
+\usepackage{makecell}%表格缩并
+\usepackage{siunitx}%SI单位--\SI{number}{unit}
+\usepackage{mathrsfs}%数学字体
+\usepackage{enumitem}%列表间距
+\usepackage{multirow}%列表横向合并单元格
+\usepackage[colorlinks,linkcolor=red,anchorcolor=blue,citecolor=green]{hyperref}%超链接引用
+\usepackage{float}%图片、表格位置排版
+\usepackage{pict2e,keyval,fp,diagbox}%带有斜线的表格
+\usepackage{fancyvrb,listings}%设置代码插入环境
+\usepackage{minted}%代码环境设置
+\usepackage{fontspec}%字体设置
+\usepackage{color,xcolor}%颜色设置
+\usepackage{titlesec} %自定义标题格式
+\usepackage{tabularx}%列表扩展
+\usepackage{authblk}%titlepage作者信息
+\usepackage{nicematrix}%更好的矩阵标定
+\usepackage{fbox}%更多浮动体盒子
+
+
+
+%以下是页边距设置
+\usepackage[left=0.5in,right=0.5in,top=0.81in,bottom=0.8in]{geometry}
+
+%以下是段行设置
+\linespread{1.4}%行距
+\setlength{\parskip}{0.1\baselineskip}%段距
+\setlength{\parindent}{2em}%缩进
+
+
+%其他设置
+\numberwithin{equation}{section}%公式按照章节编号
+\newenvironment{point}{\raggedright$\blacktriangleright$}{}
+\newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
+
+
+%代码环境\lst设置
+\definecolor{CodeBlue}{HTML}{268BD2}
+\definecolor{CodeBlue2}{HTML}{0000CD}
+\definecolor{CodeGreen}{HTML}{2AA1A2}
+\definecolor{CodeRed}{HTML}{CB4B16}
+\definecolor{CodeYellow}{HTML}{B58900}
+\definecolor{CodePurPle}{HTML}{D33682}
+\definecolor{CodeGreen2}{HTML}{859900}
+\lstset{
+    basicstyle=\tt,%字体设置
+    numbers=left, %设置行号位置
+    numberstyle=\tiny\color{black}, %设置行号大小
+    keywordstyle=\color{black}, %设置关键字颜色
+    stringstyle=\color{CodeRed}, %设置字符串颜色
+    commentstyle=\color{CodeGreen}, %设置注释颜色
+    frame=single, %设置边框格式
+    escapeinside=`, %逃逸字符(1左面的键)，用于显示中文
+    %breaklines, %自动折行
+    extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+    xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+    tabsize=4, %设置tab空格数
+    showspaces=false, %不显示空格
+    emph={TRUE,FALSE,NULL,NAN,NA,<-,},emphstyle=\color{CodeBlue2}, %其他高亮}
+}
+
+
+%节标题格式设置
+\titleformat{\section}[block]{\large\bfseries}{Exercise \arabic{section}}{1em}{}[]
+\titleformat{\subsection}[block]{}{    \arabic{section}.(\alph{subsection})}{1em}{}[]
+% \titleformat{\subsubsection}[block]{\normalsize\bfseries}{    \arabic{subsection}-\alph{subsubsection}}{1em}{}[]
+% \titleformat{\paragraph}[block]{\small\bfseries}{[\arabic{paragraph}]}{1em}{}[]
+
+
+% \titleformat{\sectioncommand}[shape]{format}{title-label}{sep}{before-title}[after-title]
+
+
+
+% 中文字号
+% 初号42pt, 小初36pt, 一号26pt, 小一24pt, 二号22pt, 小二18pt, 三号16pt, 小三15pt, 四号14pt, 小四12pt, 五号10.5pt, 小五9pt
+
+
+\begin{document}
+
+\begin{center}\thispagestyle{plain}
+
+{\LARGE\textbf{IEMS 402 Statistical Learning - 2025 Winter}}
+
+{\Large\textbf{HW1}}
+
+Tuorui Peng\footnote{TuoruiPeng2028@u.northwestern.edu}
+\end{center}
+
+\thispagestyle{myheadings}\markright{Compiled using \LaTeX}
+\pagestyle{myheadings}\markright{Tuorui Peng}
+
+
+
+\section{Design of Loss Function}
+
+\subsection{}
+
+Consider decomposing $ m(X) $ as follows:
+\begin{align*}
+    m(X):= \mathbb{E}\left[ Y|X=x \right] + \delta (X),  
+\end{align*}
+i.e. with $ \delta (X) $ being the deviation of the true conditional expectation from the model. Then the expected $ \ell_2 $ error can be written as:
+\begin{align*}
+    \mathbb{E}\left[ (Y-m(X))^2 \right]=& \mathbb{E}\left[ (Y-\mathbb{E}\left[ Y|X=x \right] - \delta (X))^2 \right] \\
+    =& \mathbb{E}\left[ (Y-\mathbb{E}\left[ Y|X=x \right])^2 \right] + \mathbb{E}\left[ \delta^2(X) \right] - 2\mathbb{E}\left[ (Y-\mathbb{E}\left[ Y|X=x \right])\delta(X) \right] \\  
+    \mathop{ = }\limits^{(i)} &  \mathbb{E}\left[ (Y-\mathbb{E}\left[ Y|X=x \right])^2 \right] + \mathbb{E}\left[ \delta^2(X) \right] \\
+    \mathop{ \geq  }\limits^{(ii)}  & \mathbb{E}\left[ (Y-\mathbb{E}\left[ Y|X=x \right])^2 \right] .
+\end{align*}
+Thus proved that the expected $ \ell_2 $ error is minimized by the conditional expectation $ \mathbb{E}\left[ Y|X=x \right]  $. Here in the proof, $ (i) $ is due to the fact that $ \mathbb{E}_{Y|X=x}\left[ Y-\mathbb{E}\left[ Y|X=x \right] \big| X=x\right] = 0 $, and (ii) is due to the non-negativity of $ \mathbb{E}\left[ \delta^2(X) \right] $, and equality holds if and only if $ \delta(X) = 0 $ almost surely.
+
+\subsection{}
+
+The expected $ \ell_1 $ error can be written as:
+\begin{align*}
+    \mathbb{E}\left[ \left\vert Y-m(X) \right\vert  \right] =& \mathbb{E}_X\left[  \int_{Y|X=x} \left\vert Y-m(x) \right\vert \,\mathrm{d}F(y|X=x)   \right]  
+\end{align*}
+taking variation with respect to $ m(X) $, we have (here $ \delta  $ refers to the variation operator):
+\begin{align*}
+    \delta  \mathbb{E}\left[ \left\vert Y-m(X) \right\vert  \right] =& \mathbb{E}_X\left[  \int_{Y|X=x} \delta m(x) \cdot \mathrm{ sgn }(Y-m(x))   \,\mathrm{d}F(y|X=x)   \right]  \\
+    =& \mathbb{E}_X\left[ \delta m(x) \int_{Y|X=x}  \mathrm{ sgn }(Y-m(x))   \,\mathrm{d}F(y|X=x)   \right] 
+\end{align*}
+
+To minimize the expected $ \ell_1 $ error, we requre the variation taking value of zero, i.e.:
+\begin{align*}
+    0= \delta  \mathbb{E}\left[ \left\vert Y-m(X) \right\vert  \right] =& \mathbb{E}_X\left[ \delta m(x) \int_{Y|X=x}   \mathrm{ sgn }(Y-m(x))   \,\mathrm{d}F(y|X=x)   \right],\quad \forall \delta m(\, \cdot \, )
+\end{align*}
+which requires choosing $ m(\, \cdot \, ) $ s.t. $ \int_{Y|X=x}   \mathrm{ sgn }(Y-m(x))   \,\mathrm{d}F(y|X=x) = \mathbb{E}_{Y|X=x}\left[ \mathrm{ sgn } (Y-m(x)) |X=x \right] = 0 $ almost surely. This is equivalent to using the conditional median as the prediction function $ m(x) = \mathrm{ median }(Y|X=x)  $.
+
+
+\subsection{}
+
+Similarly we write the following differentiation w.r.t. $ \beta  $
+\begin{align*}
+    \dfrac{\partial^{}  }{\partial \beta ^{} } \mathbb{E}\left[ (Y-\beta 'X)^2 \right] =&  - \mathbb{E}\left[ -2X (Y-\beta 'X) \right] \\
+\end{align*}
+and set it to zero, we have:
+\begin{align*}
+    0=& - \mathbb{E}\left[ -2X (Y-\beta 'X) \right] \\
+    &\Rightarrow \beta _* = \mathbb{E}\left[ XX' \right]^{-1} \mathbb{E}\left[ XY \right] 
+\end{align*}
+
+\subsection{}
+
+We consider the following function:
+\begin{align*}
+    s_\alpha (y,\hat{y}):=\begin{cases}
+        \alpha , & \text{if } y-\hat{y}>0\\
+        \alpha -1, & \text{if } y-\hat{y}<0\\
+    \end{cases} 
+\end{align*}
+and notice that $ s_\alpha (y,\hat{y}) = \dfrac{\partial^{}  }{\partial y^{} }\alpha \cdot \mathrm{ sgn }(y-\hat{y}) $\footnote{Omitting the discontinuity at $ y-\hat{y}=0 $, which won't be a big problem if we have continuous and strictly increasing loss function.}. Then we can write the deviation of expected $ \ell_\alpha  $ error as:
+\begin{align*}
+    \delta \mathbb{E}\left[ \rho _\alpha (y,m(x)) \right] =& \mathbb{E}_X\left[ \delta m(x) \int_{Y|X=x} s_\alpha (y,m(x)) \,\mathrm{d}F(y|X=x) \right] 
+\end{align*}
+minimizing the $ \rho _\alpha  $ loss function requires the variation to be zero for any $ \delta m $, i.e.:
+\begin{align*}
+    0=& \mathbb{E}_{Y|X=x}\left[  s_\alpha (y,m(x)) |X=x \right]  \Rightarrow m(x) = q_\alpha (x)
+\end{align*}
+where $ q_\alpha (x) $ is the $ \alpha  $-quantile of $ Y $ given $ X=x $.
+
+
+\section{Central Limit Theorem}
+
+\subsection{}
+
+First by SLLN we definitely have $ \bar{X}\xrightarrow[]{\mathrm{a.s.}} \mathbb{E}\left[ X \right] =\mu   $.
+
+Then we re-write the expression of $ s_n^2 $ as:
+\begin{align*}
+    s_n^2=& \dfrac{ 1 }{ n }\sum_{i=1}^n (X_i-\bar{X})^2 \\
+    =& \dfrac{ 1 }{ n }\sum_{i=1}^n  X_i^2 - \bar{X}^2 
+\end{align*}
+Then we notice that:
+\begin{align*}
+    &\text{by LLN: }\dfrac{ 1 }{ n }\sum_{i=1}^n X_i^2 \xrightarrow{p} \mathbb{E}\left[ X^2 \right]\\
+    &\text{by LLN and continuous mapping theorem: }\bar{X}^2 \xrightarrow{p} \left( \mathbb{E}\left[ X \right] \right)^2
+\end{align*}
+thus we have by slutsky's theorem:
+\begin{align*}
+     s_n^2 \xrightarrow[]{\mathrm{d}} \mathbb{E}\left[ X^2 \right] - \left( \mathbb{E}\left[ X \right] \right)^2 = \sigma ^2
+\end{align*}
+
+\subsection{}
+
+Note that $ s_n^2 \xrightarrow[]{\mathrm{d}} \sigma ^2 $ which is a constant, thus we also have $ s_n \xrightarrow[]{\mathrm{p}} \sigma  $. Then by Slutsky's theorem and CLT, we have the following:
+\begin{align*}
+    &\dfrac{ \sqrt{n}(\bar{X}_n - \mu ) }{ \sigma } \xrightarrow[]{\mathrm{d}} N(0,1)\\
+    &\dfrac{ s_n }{ \sigma } \xrightarrow[]{\mathrm{p}} 1\\
+     \Rightarrow & \dfrac{ \sqrt{n}(\bar{X}_n - \mu ) }{ s_n } \xrightarrow[]{\mathrm{d}} N(0,1)
+\end{align*}
+
+
+\section{Curse of Dimensionality: Asymptotic scaling of nearest neighbor distances}
+
+\subsection{}
+
+
+\begin{align*}
+    \mathbb{P}\left( \left\Vert x_{i(X_0)}-x_0 \right\Vert >\delta   \right) =& \mathbb{P}\left( \bigcap_{i=1}^n \{ \left\Vert x_i-x_0 \right\Vert _2 >\delta   \} \right)\\
+    =& \int \,\mathrm{d}P_{x_0} \int  \,\mathrm{d}P_{x_1^n} \prod _{i=1}^n \mathbf{1}_{\left\Vert x_i-x_0 \right\Vert _2 >\delta } \\
+    =& \int \big( 1- P\left( B_d(x,\delta ) \right)  \big) ^n \,\mathrm{d}P(x)
+\end{align*}
+
+\subsection{}
+
+
+We can construct the partition as follows: at each dimention, construct cutting points $ \{ -kr , (-k+1)r ,\ldots, (k-1)r , kr \} $ where $ k $ chosen s.t. $ k = \lceil \frac{R}{\delta /d} \rceil \leq 2 Rd/\delta  $ and $ r=\delta /d $. And each $ U_{\, \cdot \, }  $ is constructed by the combination of the cutting points. Then we have number of partition 
+\begin{align*}
+    N(\delta )=& (2k+1)^d \leq \dfrac{ 8(Rd)^d }{ \delta ^d } = \dfrac{ c }{ \delta ^d } 
+\end{align*}
+in this way, each "block" of the partition is at most a hypercube with side length $ r $, and diameter $ \mathrm{ diam } = r\sqrt{d} < \delta  $.
+
+\subsection{}
+
+Since the partition $ U_1^{N(\delta )} $ has diameter at most $ \delta  $, we consider THE block $ U_\imath $ that contains $ x $ for each given $ x $. Then we have:
+\begin{align*}
+    U_\imath \subseteq B_d(x,\delta ) \Rightarrow P\left( U_\imath  \right) \leq P\left( B_d(x,\delta ) \right)
+\end{align*}
+thus we have:
+\begin{align*}
+    \mathbb{P}\left( \left\Vert x_{i(X_0)}-x_0 \right\Vert >\delta   \right) =& \int \big( 1- P\left( B_d(x,\delta ) \right)  \big) ^n \,\mathrm{d}P(x) \\
+    \leq & \sum_{i=1}^{N(\delta )} \int_{U_i} \big( 1- P\left( P\left( U_i \right) \right)  \big) ^n \,\mathrm{d}P(x) \\
+    =&  \sum_{i=1}^{N(\delta )}\big( 1- P\left( P\left( U_i \right) \right)  \big) ^nP\left( U_i \right) \\
+    \mathop{ \leq }\limits^{(i)} & \dfrac{ c }{ en\delta ^d }.
+\end{align*}
+Thus finished the proof. Here in the proof, $ (i) $ is due to the fact that $ x\mapsto x(1-x)^n $ reaches maximum at $ x=1/(n+1) $, with maximum value
+\begin{align*}
+     \dfrac{ 1 }{ n+1 }(1-\dfrac{ 1 }{ n+1 })^n = \dfrac{ 1 }{ n } \left( 1-\dfrac{ 1 }{ n+1 } \right)^{n+1} \leq \dfrac{ 1 }{ en }.
+\end{align*}
+
+\subsection{}
+
+With the probabilistic bound, we note that to maintain the bound at $ O(1) $, we should choose $ \delta  \asymp n^{-1/d} $ (so that $ c/en\delta ^d= O(1) $). Which indicates that 
+\begin{align*}
+    \mathbb{P}\left( \left\Vert x_{i(X_0)}-x_0 \right\Vert \lesssim n^{-1/d}  \right) \geq 1- C 
+\end{align*}
+i.e. with certain minimal probability, the nearest neighbor distance is at most $ \lesssim n^{-1/d} $.
+
+
+\section{}
+
+\subsection{}
+
+Note that $ f_\theta (x)=0 $ is a hyper plane in $ \mathbb{R}^d $, the distance from $ x^{(i)} $ to which is 
+\begin{align*}
+    \mathrm{ distance }=& \dfrac{ \left\vert \theta 'x^{(i)} +\theta _0 \right\vert   }{ \left\Vert \theta  \right\Vert } \\
+    =& \begin{cases}
+        \dfrac{ \left\vert \theta 'x^{(i)} +\theta _0 \right\vert   }{ \left\Vert \theta  \right\Vert } , & \text{if } \theta 'x^{(i)} +\theta _0 >0\\
+        -\dfrac{ \left\vert \theta 'x^{(i)} +\theta _0 \right\vert   }{ \left\Vert \theta  \right\Vert } , & \text{if } \theta 'x^{(i)} +\theta _0 <0\\
+    \end{cases}
+\end{align*}
+further for hard margin SVM, $ \theta 'x^{(i)} +\theta _0 $ has the same sign as $ y^{(i)} $, thus we have:
+\begin{align*}
+    \mathrm{ distance }=& \dfrac{ y^{(i)}(\theta 'x^{(i)} +\theta _0) }{ \left\Vert \theta  \right\Vert }= \gamma ^(i) 
+\end{align*}
+
+\subsection{}
+
+Optimization problem for hard margin SVM can be written as:
+\begin{align*}
+    \mathop{ \arg\min }\limits_{\theta ,\theta _0} & \dfrac{ 1 }{ 2 }\left\Vert \theta  \right\Vert ^2 \\
+    w.r.t. & y^{(i)}(\theta 'x^{(i)} +\theta _0) \geq 1  
+\end{align*}
+and note that the decision boundary is determined by the $ (\theta ,\theta _0) $, which has an extra degree of freedom w.r.t. scale transformation. We cancel this degree of freedom by setting a constraint $ \left\Vert \theta  \right\Vert = \dfrac{ 1 }{ M }  $.
+
+The Lagrangian can be written as:
+\begin{align*}
+    \mathcal{L}(\theta ,\theta _0,\alpha_1^n,\kappa  )=& \dfrac{ 1 }{ 2 }\left\Vert \theta  \right\Vert ^2 - \sum_{i=1}^n \alpha _i \left( y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 \right)  - \kappa \left( \left\Vert \theta  \right\Vert -\dfrac{ 1 }{ M }  \right)
+\end{align*}
+and the optimization problem can be solved by minimizing the Lagrangian w.r.t. $ \theta ,\theta _0 $ and maximizing w.r.t. $ \alpha_1^n $.
+\begin{align*}
+    \dfrac{ \partial \mathcal{L} }{ \partial \theta  }=& \theta - \sum_{i=1}^n \alpha _i y^{(i)}x^{(i)} =0\\
+    \dfrac{ \partial \mathcal{L} }{ \partial \theta _0 }=& - \sum_{i=1}^n \alpha _i y^{(i)} =0\\
+    \dfrac{ \partial \mathcal{L} }{ \partial \alpha _i }=& y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 =0 \\
+    \dfrac{ \partial \mathcal{L} }{ \partial \kappa  }=& \left\Vert \theta  \right\Vert -\dfrac{ 1 }{ M } =0
+\end{align*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
