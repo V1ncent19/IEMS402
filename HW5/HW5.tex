@@ -1,0 +1,323 @@
+\documentclass[11pt,a4paper]{ctexart}
+%以下为所使用的宏包
+\usepackage{ulem}%下划线
+\usepackage{amsmath,amsfonts,amssymb,amsthm,amsbsy}%数学符号
+\usepackage{graphicx}%插入图片
+\usepackage{booktabs}%三线表
+%\usepackage{indentfirst}%首行缩进
+\usepackage{tikz}%作图
+\usepackage{appendix}%附录
+\usepackage{array}%多行公式/数组
+\usepackage{makecell}%表格缩并
+\usepackage{siunitx}%SI单位--\SI{number}{unit}
+\usepackage{mathrsfs}%数学字体
+\usepackage{enumitem}%列表间距
+\usepackage{multirow}%列表横向合并单元格
+\usepackage[colorlinks,linkcolor=red,anchorcolor=blue,citecolor=green]{hyperref}%超链接引用
+\usepackage{float}%图片、表格位置排版
+\usepackage{pict2e,keyval,fp,diagbox}%带有斜线的表格
+\usepackage{fancyvrb,listings}%设置代码插入环境
+\usepackage{minted}%代码环境设置
+\usepackage{fontspec}%字体设置
+\usepackage{color,xcolor}%颜色设置
+\usepackage{titlesec} %自定义标题格式
+\usepackage{tabularx}%列表扩展
+\usepackage{authblk}%titlepage作者信息
+\usepackage{nicematrix}%更好的矩阵标定
+\usepackage{fbox}%更多浮动体盒子
+
+
+
+%以下是页边距设置
+\usepackage[left=0.5in,right=0.5in,top=0.81in,bottom=0.8in]{geometry}
+
+%以下是段行设置
+\linespread{1.4}%行距
+\setlength{\parskip}{0.1\baselineskip}%段距
+\setlength{\parindent}{2em}%缩进
+
+
+%其他设置
+\numberwithin{equation}{section}%公式按照章节编号
+\newenvironment{point}{\raggedright$\blacktriangleright$}{}
+\newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
+
+
+%代码环境\lst设置
+\definecolor{CodeBlue}{HTML}{268BD2}
+\definecolor{CodeBlue2}{HTML}{0000CD}
+\definecolor{CodeGreen}{HTML}{2AA1A2}
+\definecolor{CodeRed}{HTML}{CB4B16}
+\definecolor{CodeYellow}{HTML}{B58900}
+\definecolor{CodePurPle}{HTML}{D33682}
+\definecolor{CodeGreen2}{HTML}{859900}
+\lstset{
+    basicstyle=\tt,%字体设置
+    numbers=left, %设置行号位置
+    numberstyle=\tiny\color{black}, %设置行号大小
+    keywordstyle=\color{black}, %设置关键字颜色
+    stringstyle=\color{CodeRed}, %设置字符串颜色
+    commentstyle=\color{CodeGreen}, %设置注释颜色
+    frame=single, %设置边框格式
+    escapeinside=`, %逃逸字符(1左面的键)，用于显示中文
+    %breaklines, %自动折行
+    extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+    xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+    tabsize=4, %设置tab空格数
+    showspaces=false, %不显示空格
+    emph={TRUE,FALSE,NULL,NAN,NA,<-,},emphstyle=\color{CodeBlue2}, %其他高亮}
+}
+
+
+%节标题格式设置
+\titleformat{\section}[block]{\large\bfseries}{Exercise \arabic{section}}{1em}{}[]
+\titleformat{\subsection}[block]{}{    \arabic{section}.(\alph{subsection})}{0.3em}{}[]
+\titleformat{\subsubsection}[block]{\normalsize}{    \arabic{section}.(\alph{subsection}).(\roman{subsubsection})}{0.3em}{}[]
+% \titleformat{\paragraph}[block]{\small\bfseries}{[\arabic{paragraph}]}{1em}{}[]
+
+
+% \titleformat{\sectioncommand}[shape]{format}{title-label}{sep}{before-title}[after-title]
+
+
+
+% 中文字号
+% 初号42pt, 小初36pt, 一号26pt, 小一24pt, 二号22pt, 小二18pt, 三号16pt, 小三15pt, 四号14pt, 小四12pt, 五号10.5pt, 小五9pt
+
+
+\begin{document}
+
+\begin{center}\thispagestyle{plain}
+
+{\LARGE\textbf{IEMS 402 Statistical Learning - 2025 Winter}}
+
+{\Large\textbf{HW4}}
+
+Tuorui Peng\footnote{TuoruiPeng2028@u.northwestern.edu}
+\end{center}
+
+\thispagestyle{myheadings}\markright{Compiled using \LaTeX}
+\pagestyle{myheadings}\markright{Tuorui Peng}
+
+
+
+
+\section{Le Cam One-step estimators}
+
+For convenience, we label $ l_n(\theta ) = \dfrac{ 1 }{ n }L_n(\theta)  $.
+
+
+Solving the first order equation is equivalent to solving the following equation: (I guess there is a typo in the question setting, should be $ \nabla l_n(\hat{\theta } _n) + \nabla^2 l_n(\hat{\theta } _n)\delta _n = 0 $)
+\begin{align*}
+    \delta _n  =& - (\nabla^2 l_n(\hat{\theta } _n))^{-1} \nabla l_n(\hat{\theta } _n) 
+\end{align*}
+in which note that $ \hat{\theta }_n - \theta _0 = O(n^{-1/2}) $.
+
+Then we have
+\begin{itemize}[topsep=2pt,itemsep=0pt]
+    \item 
+    \begin{align*}
+        \nabla l_n(\theta _0)\xrightarrow[]{\mathrm{d}} \mathcal{N}(0, var(\nabla \ell (\theta _0, X))/n) = \mathcal{N}(0, I(\theta _0)/n)
+    \end{align*}
+    \item
+    \begin{align*}
+        \nabla^2 l_n(\theta _0) =& \nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right] + O(n^{-1/2}) \\
+    \end{align*}
+    \item 
+    \begin{align*}
+        \nabla^2 l_n(\hat{\theta } _n) - \nabla^2 l_n(\theta _0) =& \dfrac{ 1 }{ n }\sum_{i=1}^n \nabla^2 \ell (\hat{\theta } _n, X_i) - \dfrac{ 1 }{ n }\sum_{i=1}^n \nabla^2 \ell (\theta _0, X_i) \\
+        \leq & \dfrac{ 1 }{ n }\sum_{i=1}^n M(X_i) \left\vert \hat{\theta }_n- \theta _0 \right\vert \\
+        =& \left\vert \hat{\theta }_n- \theta _0 \right\vert (\mathbb{E}\left[ M(X) \right] + O(n^{-1/2})) \\
+        =& O(n^{-1/2})
+    \end{align*}
+    
+    \item 
+    \begin{align*}
+        \nabla l_n(\hat{\theta }_n) - \nabla l_n(\theta _0) =& \dfrac{ 1 }{ n }\sum_{i=1}^n \nabla \ell (\hat{\theta } _n, X_i) - \dfrac{ 1 }{ n }\sum_{i=1}^n \nabla \ell (\theta _0, X_i) \\ 
+        =& \dfrac{ 1 }{ n }\sum_{i=1}^n \nabla^2 \ell (\theta _0, X_i) (\hat{\theta }_n- \theta _0) + o(\hat{\theta }_n- \theta _0) \\
+        =& (\nabla^2 l_n(\theta _0) + O(n^{-1/2}))(\hat{\theta }_n- \theta _0) + o(n^{-1/2})\\
+        =& \nabla^2 l_n(\theta _0)(\hat{\theta }_n- \theta _0) + o(n^{-1/2})\\
+        =& \nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right](\hat{\theta }_n- \theta _0) + o(n^{-1/2})\\
+    \end{align*}
+
+
+
+
+    
+    
+    
+    
+    
+    
+\end{itemize}
+
+Now we have
+\begin{align*}
+    \delta _n  =& - (\nabla^2 l_n(\hat{\theta } _n))^{-1} \nabla l_n(\hat{\theta } _n) \\
+    =& - (\nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right] + O(n^{-1/2}))^{-1} (\mathcal{N}(0, I(\theta _0)/n)+\nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right](\hat{\theta }_n- \theta _0) + o(n^{-1/2})) \\
+    =& - \big( \nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right]^{-1} + O(n^{-1/2}) ) (\mathcal{N}(0, I(\theta _0)/n)+\nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right](\hat{\theta }_n- \theta _0) + o(n^{-1/2}))  \\
+    \xrightarrow[]{\mathrm{d}} &\theta _0 - \hat{\theta }_n + \nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right]\mathcal{N}(0, I(\theta _0)/n) + o(n^{-1/2})
+\end{align*}
+then
+\begin{align*}
+    \sqrt{n}(\bar{\theta }_n-\theta _0)=& \sqrt{n}(\hat{\theta }_n + \delta _n) \xrightarrow[]{\mathrm{d}} \mathcal{N}(\theta _0, (\nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right])^{-1}I(\theta _0)(\nabla^2 \mathbb{E}\left[ \ell(\theta _0,X) \right])^{-1})
+\end{align*}
+
+\section{Sub-Gaussianity of bounded R.V.s}
+
+\subsection{}
+
+Consider $ W:= Y-(a+b)/2 $, for which we notice that $ \left\vert W \right\vert \leq (b-a)/2 $ and $ var(W)=var(Y) $. Now we have
+\begin{align*}
+    var(Y)= & var(W)\\
+    =& \mathbb{E}\left[ W^2 \right] - \mathbb{E}\left[ W \right]^2 \\
+    \leq & \mathbb{E}\left[ W^2 \right] \\
+    \leq & \dfrac{ (b-a)^2 }{ 4 } 
+\end{align*}
+
+\subsection{}
+We have
+\begin{align*}
+    \phi'(\lambda )=&\dfrac{ \mathbb{E}_P\left[ Xe^{\lambda X} \right]  }{ \mathbb{E}_P\left[ e^{\lambda X} \right]  }  = \mathbb{E}_P\left[ X \dfrac{ e^{\lambda X} }{ \mathbb{E}_P\left[ e^{\lambda X} \right] }  \right] = \mathbb{E}_{Q_\lambda }\left[ X \right] 
+\end{align*}
+and
+\begin{align*}
+    \phi''(\lambda )=& \dfrac{ \mathbb{E}_P\left[ X^2e^{\lambda X} \right]\mathbb{E}_P\left[ e^{\lambda X} \right] - \mathbb{E}_P\left[ Xe^{\lambda X} \right]^2 }{ \mathbb{E}_P\left[ e^{\lambda X} \right] ^2 } \\
+    =& \mathbb{E}_P\left[ X^2 \dfrac{ e^{\lambda X} }{ \mathbb{E}_P\left[ e^{\lambda X} \right] } \right] - \left( \mathbb{E}_P\left[ X \dfrac{ e^{\lambda X} }{ \mathbb{E}_P\left[ e^{\lambda X} \right] }  \right]^2 \right)\\
+    =& \mathbb{E}_{Q_\lambda }\left[ X^2 \right] - \left( \mathbb{E}_{Q_\lambda }\left[ X \right] \right)^2\\
+    =& var_{Q_\lambda }(X)
+\end{align*}
+
+
+
+\subsection{}
+
+In this part we consider relabel $ \phi(\lambda ) = \log \mathbb{E}\left[ e^{\lambda (X-\mathbb{E}\left[ X \right] )} \right]  $.
+
+Note that if $ X\in [a,b] $, then we have
+\begin{align*}
+    \phi''(\lambda ) = var_{Q_\lambda }(X) \leq \dfrac{ (b-a)^2 }{ 4 } 
+\end{align*}
+on the other hand we notice that $ \phi(0) = 0 $ and $ \phi'(0) = 0 $
+\begin{align*}
+    \phi'(\lambda )=& \phi'(0) + \int_0^\lambda \phi''(t)dt \leq  \dfrac{ (b-a)^2 }{ 4 } \lambda\\
+    \phi(\lambda ) =& \phi(0) + \int_0^\lambda \phi'(t)dt \leq \dfrac{ (b-a)^2 }{ 8 } \lambda^2 
+\end{align*}
+
+Together we have
+\begin{align*}
+    \phi(\lambda ) = \log \mathbb{E}\left[ e^{\lambda (X-\mathbb{E}\left[ X \right] )} \right] \leq \dfrac{ (b-a)^2 }{ 8 } \lambda^2  \Rightarrow \mathbb{E}\left[ e^{\lambda (X-\mathbb{E}\left[ X \right] )} \right] \leq e^{(b-a)^2\lambda^2/8} 
+\end{align*}
+i.e. $ X $ is sub-Gaussian with parameter $ (b-a)^2/4 $.
+
+
+
+
+
+
+
+
+\section{Concentration inequalities}
+
+Note that by 
+
+\subsection{}
+By taylor expansion we have
+\begin{align*}
+    \mathbb{E}\left[ e^{\lambda X} \right] =& \mathbb{E}\left[ 1 + \lambda X +  \dfrac{ \lambda ^2 X^2 }{ 2 } + \sum_{k=3}^\infty \dfrac{ \lambda ^k X^k }{ k! }  \right] \\
+    \leq & 1+0+ \mathbb{E}\left[ \dfrac{ X^2 }{ c^2 }\sum_{k=2}^\infty \dfrac{ \lambda ^k c^k }{ k! }  \right] \\
+    =& 1+ \dfrac{ \sigma ^2 }{ c^2 }(e^{\lambda c}-1-\lambda c) \\
+    \leq & \exp\left[ \dfrac{ \sigma ^2 }{ c^2 }(e^{\lambda c}-1-\lambda c) \right] 
+\end{align*}
+
+
+\subsection{Bennett's inequality}
+
+Using the result from the previous part, we have
+\begin{align*}
+    \mathbb{P}\left( \sum_{i=1}^n X_i \geq t \right) =& \mathbb{P}\left( e^{\lambda \sum_{i=1}^n X_i} \geq e^{\lambda t} \right) \\
+    \leq & \dfrac{ \mathbb{E}\left[ e^{\lambda \sum_{i=1}^n X_i} \right] }{ e^{\lambda t} } \\
+    \leq & \exp\left[ \dfrac{ \sum_{i=1}^n \sigma_i^2 }{ c^2 }(e^{\lambda c} - 1 - \lambda c)  - \lambda t \right]  
+\end{align*}
+Optimizing the right hand side with respect to $ \lambda $, we have optimal $ \lambda _* = \dfrac{ 1 }{ c }\log \dfrac{ ct }{ n\sigma ^2 }   $. Substituting this back we have
+\begin{align*}
+    \mathbb{P}\left( \sum_{i=1}^n X_i \geq t \right) \leq & \exp\left[ \dfrac{ n\sigma ^2 }{ c^2 }\big(\dfrac{ ct }{ n\sigma ^2 } -1-\log\dfrac{ ct  }{ n\sigma ^2 } \big)- \dfrac{ t }{ c  } \log \dfrac{ ct  }{ n\sigma ^2 }   \right] = \exp\left[ -\dfrac{ n\sigma ^2 }{ c^2 }h(\dfrac{ ct  }{ n\sigma ^2 } )  \right]
+\end{align*}
+
+\subsection{Bernstein's inequality}
+
+It suffices to prove for one sided part (cuz we can apply the whole part to $ -X_i $). 
+
+
+\begin{align*}
+    h(u) = (1+u)\log(1+u) - u
+\end{align*}
+
+
+
+We have
+\begin{align*}
+    \mathbb{P}\left( \sum_{i=1}^n X_i \geq nt \right) \leq & \exp\left[ -\dfrac{ n\sigma ^2 }{ c^2 } h(\dfrac{ ct }{ \sigma ^2 } ) \right]  
+\end{align*}
+so it suffice to prove the following inequality:
+\begin{align*}
+    h(u)\geq \dfrac{ u^2 }{ 2+2u/3 }  ,\quad u\geq 0
+\end{align*}
+which is trivial by taking derivative.
+\begin{align*}
+    g(u):=& (2 + 2u/3)h(u) - u^2 ,\quad g(0)=0\\
+    g'(u) =& \dfrac{ 4 }{ 3 }\log (u+1) + \dfrac{ 2 }{ 3 }( 2(u+1)\log(u+1) - u ) - 2u ,\quad g'(0)=0\\
+    g''(u)=& \dfrac{ 4 }{ 3(u+1) } + \dfrac{ 4 }{ 3 }\log(u+1) - \dfrac{ 4 }{ 3 } \geq 0
+\end{align*}
+
+With the above, substitute $ u = \dfrac{ ct }{ \sigma ^2 }  $ and we can obtain the desired result.
+
+
+
+
+\subsection{}
+
+Berstein' inequality is stronger than Hoeffding's inequality for small $ t $, to be specific, when
+\begin{align*}
+     ct\lesssim \sigma ^2,\quad i.e. \quad t\lesssim \dfrac{ \sigma ^2 }{ c }
+\end{align*}
+
+
+\section{Application of Concentration Inequalities}
+
+It suffices to lower bound the covering number of $ \{0,1\}^{n} $. 
+
+WLOG assume $ n/4 $ is an integer, otherwise we apply the following argument to $ \lfloor n/4 \rfloor $.
+
+Assume we have a $ n/4 $ minimum covering set $ \mathcal{S} = \{z_1,\ldots, z_S\} $. For each $ i\in [S] $, there are $ \sum_{i=0}^{n/4} \binom{n}{n/4}$ points that are in $ \mathcal{B}_H(z_i, n/4) $. And this covering sould cover all $ 2^n $ points, so we have
+\begin{align*}
+    S \sum_{i=0}^{n/4} \binom{n}{n/4} \geq 2^n \Rightarrow \dfrac{ 1 }{ S } \leq \dfrac{ 2^n }{ \sum_{i=0}^{n/4} \binom{n}{n/4} } \asymp \mathbb{P}\left( \mathrm{ Binom } (n, 1/2)  < n/4  \right) \leq \exp\left[ -\dfrac{ n }{ 8 } \right] 
+\end{align*}
+As a result, we have
+\begin{align*}
+    S \geq \exp\left[ \dfrac{ n }{ 8 } \right] 
+\end{align*}
+
+Next note that we have relation between covering number and packing number, thus gives that 
+\begin{align*}
+    M(\{0,1\}^n, n/4) \geq N(\{0,1\}^n, n/4) = S \geq \exp\left[ \dfrac{ n }{ 8 } \right]
+\end{align*}
+this packing set is the set $ A $ desired that satisfies $ \left\vert A \right\vert \leq e^{n/8}  $, while any $ x,y\in A $ satisfies $ \left\Vert x-y \right\Vert _\mathrm{ Hamming }  \geq n/4  $.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

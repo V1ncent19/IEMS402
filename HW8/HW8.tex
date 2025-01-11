@@ -1,0 +1,356 @@
+\documentclass[11pt,a4paper]{ctexart}
+%以下为所使用的宏包
+\usepackage{ulem}%下划线
+\usepackage{amsmath,amsfonts,amssymb,amsthm,amsbsy}%数学符号
+\usepackage{graphicx}%插入图片
+\usepackage{booktabs}%三线表
+%\usepackage{indentfirst}%首行缩进
+\usepackage{tikz}%作图
+\usepackage{appendix}%附录
+\usepackage{array}%多行公式/数组
+\usepackage{makecell}%表格缩并
+\usepackage{siunitx}%SI单位--\SI{number}{unit}
+\usepackage{mathrsfs}%数学字体
+\usepackage{enumitem}%列表间距
+\usepackage{multirow}%列表横向合并单元格
+\usepackage[colorlinks,linkcolor=red,anchorcolor=blue,citecolor=green]{hyperref}%超链接引用
+\usepackage{float}%图片、表格位置排版
+\usepackage{pict2e,keyval,fp,diagbox}%带有斜线的表格
+\usepackage{fancyvrb,listings}%设置代码插入环境
+\usepackage{minted}%代码环境设置
+\usepackage{fontspec}%字体设置
+\usepackage{color,xcolor}%颜色设置
+\usepackage{titlesec} %自定义标题格式
+\usepackage{tabularx}%列表扩展
+\usepackage{authblk}%titlepage作者信息
+\usepackage{nicematrix}%更好的矩阵标定
+\usepackage{fbox}%更多浮动体盒子
+
+
+
+%以下是页边距设置
+\usepackage[left=0.5in,right=0.5in,top=0.81in,bottom=0.8in]{geometry}
+
+%以下是段行设置
+\linespread{1.4}%行距
+\setlength{\parskip}{0.1\baselineskip}%段距
+\setlength{\parindent}{2em}%缩进
+
+
+%其他设置
+\numberwithin{equation}{section}%公式按照章节编号
+\newenvironment{point}{\raggedright$\blacktriangleright$}{}
+\newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
+
+
+%代码环境\lst设置
+\definecolor{CodeBlue}{HTML}{268BD2}
+\definecolor{CodeBlue2}{HTML}{0000CD}
+\definecolor{CodeGreen}{HTML}{2AA1A2}
+\definecolor{CodeRed}{HTML}{CB4B16}
+\definecolor{CodeYellow}{HTML}{B58900}
+\definecolor{CodePurPle}{HTML}{D33682}
+\definecolor{CodeGreen2}{HTML}{859900}
+\lstset{
+    basicstyle=\tt,%字体设置
+    numbers=left, %设置行号位置
+    numberstyle=\tiny\color{black}, %设置行号大小
+    keywordstyle=\color{black}, %设置关键字颜色
+    stringstyle=\color{CodeRed}, %设置字符串颜色
+    commentstyle=\color{CodeGreen}, %设置注释颜色
+    frame=single, %设置边框格式
+    escapeinside=`, %逃逸字符(1左面的键)，用于显示中文
+    %breaklines, %自动折行
+    extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+    xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+    tabsize=4, %设置tab空格数
+    showspaces=false, %不显示空格
+    emph={TRUE,FALSE,NULL,NAN,NA,<-,},emphstyle=\color{CodeBlue2}, %其他高亮}
+}
+
+
+%节标题格式设置
+\titleformat{\section}[block]{\large\bfseries}{Exercise \arabic{section}}{1em}{}[]
+\titleformat{\subsection}[block]{}{    \arabic{section}.(\alph{subsection})}{1em}{}[]
+% \titleformat{\subsubsection}[block]{\normalsize\bfseries}{    \arabic{subsection}-\alph{subsubsection}}{1em}{}[]
+% \titleformat{\paragraph}[block]{\small\bfseries}{[\arabic{paragraph}]}{1em}{}[]
+
+
+% \titleformat{\sectioncommand}[shape]{format}{title-label}{sep}{before-title}[after-title]
+
+
+
+% 中文字号
+% 初号42pt, 小初36pt, 一号26pt, 小一24pt, 二号22pt, 小二18pt, 三号16pt, 小三15pt, 四号14pt, 小四12pt, 五号10.5pt, 小五9pt
+
+
+\begin{document}
+
+\begin{center}\thispagestyle{plain}
+
+{\LARGE\textbf{IEMS 402 Statistical Learning - 2025 Winter}}
+
+{\Large\textbf{HW8}}
+
+Tuorui Peng\footnote{TuoruiPeng2028@u.northwestern.edu}
+\end{center}
+
+\thispagestyle{myheadings}\markright{Compiled using \LaTeX}
+\pagestyle{myheadings}\markright{Tuorui Peng}
+
+
+
+
+\section{Hilbert Embedding of Probability}
+
+
+
+\subsection{}
+
+Consider the functional $ L: f\mapsto \mathbb{E}\left[ f(X) \right]  $ which is a bounded linear functional. By Riesz Representation Theorem, there exists a unique $ h_L\in \mathcal{H} $ such that 
+\begin{align*}
+     \forall f\in\mathcal{H}:\, \left\langle h_L,f \right\rangle = L(f)=\mathbb{E}_P\left[ f(X) \right]=& \mathbb{E}_P\left[\left\langle \varphi (X), f \right\rangle  \right]  =\left\langle \mathbb{E}_P\left[ \varphi (X) \right] ,f  \right\rangle 
+\end{align*}
+i.e. such $ \mathcal{H}\ni h_L = \mathbb{E}_P\left[ \varphi (X) \right]  $.
+
+
+\subsection{}
+
+
+We prove the contrapositive. Suppose $ \mathbb{E}_P\left[ \varphi (X) \right] = \mathbb{E}_Q\left[ \varphi(X) \right] $, then we consider the following setting: $ \forall \varepsilon >0 $, $ \forall f\in \mathcal{X} $, $ \exists h_{f,\varepsilon }\in \mathcal{H} $ s.t. $ \left\Vert f-h_{f,\varepsilon } \right\Vert _\infty <\varepsilon  $, and we have
+\begin{align*}
+    \mathbb{E}_P\left[ h_{f,\varepsilon }(X) \right]=& \mathbb{E}_P\left[ \left\langle h_{f,\varepsilon }, \varphi (X) \right\rangle   \right]\\
+    =& \left\langle \mathbb{E}_P\left[ \varphi (X) \right] ,h_{f,\varepsilon }\right\rangle \\
+    \mathbb{E}_Q\left[ h_{f,\varepsilon }(X) \right]=& \mathbb{E}_Q\left[ \left\langle h_{f,\varepsilon }, \varphi (X) \right\rangle   \right]\\
+    =& \left\langle \mathbb{E}_Q\left[ \varphi (X) \right] ,h_{f,\varepsilon }\right\rangle
+\end{align*}
+So we have
+\begin{align*}
+    \left\vert \mathbb{E}_P\left[ f(X) \right] - \mathbb{E}_Q\left[ f(X) \right]   \right\vert \leq & 2\varepsilon + \left\vert \mathbb{E}_P\left[ h_{f,\varepsilon }(X) \right] - \mathbb{E}_Q\left[ h_{f,\varepsilon }(X) \right]   \right\vert \\
+    =& 2\varepsilon + \left\vert \left\langle \mathbb{E}_P\left[ \varphi (X) \right] - \mathbb{E}_Q\left[ \varphi (X) \right] ,h_{f,\varepsilon } \right\rangle  \right\vert \\
+    =& 2\varepsilon 
+\end{align*}
+Note that the above statement is true $ \forall \varepsilon >0,\, \forall f\in \mathcal{C} $, thus proves the contrapositive that $ P\mathop{ = }\limits^{\mathrm{ d } } Q $ must hold. And we have if $ P\mathop{ \neq }\limits^{\mathrm{ d } } Q $, then $ \mathbb{E}_P\left[ \varphi (X) \right] \neq \mathbb{E}_Q\left[ \varphi (X) \right] $.
+
+
+\subsection{}
+
+We have for right hand side:
+\begin{align*}
+     \mathrm{R.H.S.}=&\sqrt{\mathbb{E}\left[ k(X,X') \right] + \mathbb{E}\left[ k(Z,Z') \right]  -2\mathbb{E}\left[ k(X,Z) \right] }\\
+     =& \sqrt{ \left\langle \varphi (X), \varphi (X') \right\rangle + \left\langle \varphi (Z), \varphi (Z') \right\rangle -2\left\langle \varphi (X), \varphi (Z) \right\rangle }\\
+     =& \sqrt{\left\langle \varphi (X)-\varphi (X') , \varphi (Z)-\varphi (Z') \right\rangle } \\
+    :=& E
+\end{align*}
+
+For left hand side:
+\begin{align*}
+    \mathop{ \sup }\limits_{f\in\mathcal{H},\left\Vert f \right\Vert \leq 1}\left\vert \mathbb{E}_P\left[ f(X) \right] -\mathbb{E}_Q\left[ f(X) \right] \right\vert =& \mathop{ \sup }\limits_{f\in\mathcal{H},\left\Vert f \right\Vert \leq 1}\left\vert \left\langle \left\langle \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] ,f  \right\rangle  \right\rangle  \right\vert 
+\end{align*}
+which reach maximum when $ f\propto \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] := \alpha \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] $, in which $ \alpha  $ is taken to make $ \left\Vert f \right\Vert =1 $. Thus we have
+\begin{align*}
+    1=\alpha ^2\left\langle \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right],\mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] \right\rangle =& \alpha ^2E^2  \Rightarrow \alpha =\frac{1}{E} 
+\end{align*}
+
+Substitute back to the left hand side, we have
+\begin{align*}
+     \mathrm{L.H.S.}=&\mathop{ \sup }\limits_{f\in\mathcal{H},\left\Vert f \right\Vert \leq 1}\left\vert \mathbb{E}_P\left[ f(X) \right] -\mathbb{E}_Q\left[ f(X) \right] \right\vert \\
+     =& \left\vert \left\langle \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] ,\frac{1}{E}\mathbb{E}\left[ \varphi (X)-\varphi (Z) \right]  \right\rangle  \right\vert \\
+    =& \frac{1}{E}\left\langle \mathbb{E}\left[ \varphi (X)-\varphi (Z) \right] ,\mathbb{E}\left[ \varphi (X)-\varphi (Z) \right]  \right\rangle \\
+    =& \frac{1}{E}E=E = \mathrm{R.H.S.}
+\end{align*}
+
+
+\section{Example of Kernel}
+
+\subsection{}
+We can verify the condition for $ k_\mathrm{ norm }  $ to be a kernel function by checking the positive semi-definiteness and symmetry easily:
+\begin{align*}
+    k_\mathrm{ norm }  (x,z) = & k_\mathrm{ norm } (z,x)\\
+    \forall x_1^m,\,\alpha _1^n,\, \sum_{i,j=1}^n k_\mathrm{ norm }(x_i,x_j)\alpha _i\alpha _j = & \sum_{i,j=1}^n k(x_i,z_i)\dfrac{ \alpha _i }{ \sqrt{k}(x_i,x_i) }\dfrac{ \alpha _j }{ \sqrt{k(x_j,x_j)} }\geq 0  
+\end{align*}
+
+\subsection{}
+
+We prove the reproducing property by checking the following:
+\begin{align*}
+    \forall f,\,\forall x\,:\,\left\langle k(x,\, \cdot \, ), f \right\rangle  =& \int_0^1 k'(x,z)f'(z)\,\mathrm{d}z\\
+    =& \int_0^1 \mathbf{1}_{[0,x]}(z)\mathbf{1}_{[0,x]}(z)f'(z)\,\mathrm{d}z\\
+    =& \int_0^x f'(z)\,\mathrm{d}z\\
+    =& f(x)
+\end{align*}
+
+And we can easily verify the symmetry and positive semi-definiteness of $ k(\, \cdot \, ,\, \cdot \, ) = \, \cdot \, \wedge \, \cdot \,  $ as follows:
+\begin{align*}
+    k(x,z) = & x\wedge z = z\wedge x = k(z,x)\\
+    \forall g:\, \int_0^1\int_0^1 g(x)g(z)k(x,z)\,\mathrm{d}x\,\mathrm{d}z = & \int_0^1\int_0^1 g(x)g(z)\left\langle \mathbf{1}_{[0,x]},\mathbf{1}_{[0,z]} \right\rangle \,\mathrm{d}x\,\mathrm{d}z\\
+    =& \int_0^1\int_0^1 \left\langle g(x)\mathbf{1}_{[0,x]}, g(z)\mathbf{1}_{[0,z]}  \right\rangle \,\mathrm{d}x\,\mathrm{d}z\\
+    =& \left\Vert \int_0^1 g(x)\mathbf{1}_{[0,x]} \,\mathrm{d}x \right\Vert ^2\geq 0.
+\end{align*}
+
+
+\subsection{}
+
+WLOG take $ f^{(i)}(0)=0 $ for all $ i\leq k-1 $. So that $ \left\langle f,g \right\rangle = \int _0^1 f^{(k)}(x)g^{(k)}(x) \,\mathrm{d}x  $.
+
+Using similar integration by parts idea, we should have: for each given $ x $, the function $ k(x,\, \cdot \, ) $ satisfies
+\begin{align*}
+    g(x)=& \left\langle k(x,\, \cdot \, ), g \right\rangle \\
+    =& \int_0^1 k^{(k)}(x,z)g^{(k)}(z)\,\mathrm{d}z
+\end{align*}
+By the Taylor expansion of $ g $ at $ 0 $ with integraion remainders, i.e.
+\begin{align*}
+     g(x) =& \int_0^x \dfrac{ g^{(k)}(z) }{ (k-1)! } (x-z)^{k-1}\,\mathrm{d}z 
+\end{align*}
+we have
+\begin{align*}
+    k^{(k)}(x,z) = \dfrac{ (x-z)^{k-1} }{ (k-1)! } \mathbf{1}_{[0,x]}(z) = \dfrac{ (x-z)^{k-1}_+ }{ (k-1)! }
+\end{align*}
+and thus
+\begin{align*}
+    k(x,z) =& \left\langle  k(x,\, \cdot \, ), k(z,\, \cdot \, ) \right\rangle \\
+    =& \int_0^1 k^{(k)}(x,u)k^{(k)}(z,u)\,\mathrm{d}u\\
+    =& \int_0^1 \dfrac{ (x-u)^{k-1}_+ }{ (k-1)! }\dfrac{ (z-u)^{k-1}_+ }{ (k-1)! }\,\mathrm{d}u
+\end{align*}
+
+
+\section{$ \varphi  $-divergence DRO and Variance Regularization}
+
+
+Optimzation problem is formalized as:
+\begin{align*}
+    \mathop{ \sup }\limits_{P\in\mathcal{P}_n }\mathbb{E}_P\left[ \ell(\theta ,X) \right] ,\quad s.t.\, D_\varphi (P\Vert \hat{P}_n) \leq\dfrac{ \rho  }{ n } 
+\end{align*}
+Since the empirical distribution $ \hat{P}_n $ is a Dirac measure, the optimizer would also be a Dirac measure supported on $ \mathrm{ supp }(X_1^n)  $. We denoted this PMF as:
+\begin{align*}
+    P:\, X=X_i,\quad w.p. \, p_i 
+\end{align*}
+So the optimization problem can be reformulated as:
+\begin{align*}
+    \mathop{ \sup }\limits_{p_i\geq 0,\,\sum_{i=1}^n p_i=1}\sum_{i=1}^n p_i\ell(\theta ,X_i) ,\quad s.t.\, D_\varphi (P\Vert \hat{P}_n) \leq\dfrac{ \rho  }{ n } 
+\end{align*}
+Lagrangian:
+\begin{align*}
+    \mathcal{L}(\vec{p};\lambda ,\mu )=& \sum_{i=1}^n p_i\ell(\theta ,X_i) + \lambda \left( \sum_{i=1}^n np_i^2 - 1 - \dfrac{ 2\rho  }{ n }  \right) + \mu \left( \sum_{i=1}^n p_i - 1 \right),\quad \lambda \leq 0
+\end{align*}
+which is maximized w.r.t. $ \vec{p} $ when 
+\begin{align*}
+    p_i^* = - \dfrac{ \ell(X_i,\theta )+\mu  }{ 2\lambda n }
+\end{align*}
+and gives dual problem:
+\begin{align*}
+     \theta _D(\lambda ,\mu )=& -\sum_{i=1}^n \dfrac{ (\ell(X_i,\theta )+\mu )^2 }{ 4\lambda n }-\lambda (1+\dfrac{ 2\rho  }{ n } ) -\mu ,\quad \lambda \geq 0 
+\end{align*}
+Which is minimized w.r.t. $ \lambda ,\mu  $:
+\begin{align*}
+    0=\begin{cases}
+        \dfrac{\partial^{}  }{\partial \lambda ^{} }\theta _D =& \sum_{i=1}^n \dfrac{ (\ell(X_i,\theta )+\mu )^2 }{ 4\lambda ^2n }- (1+\dfrac{ 2\rho  }{ n } ) \\
+    \dfrac{\partial^{}  }{\partial \mu ^{} }\theta _D =& -\sum_{i=1}^n \dfrac{ (\ell(X_i,\theta )+\mu ) }{ 2\lambda n }-1
+    \end{cases} \Rightarrow \begin{cases}
+        \mu =\sqrt{\dfrac{ var_{\hat{P}_n}(\ell(X,\theta )) }{ 2\rho /n } } - \mathbb{E}_{\hat{P}_n}\left[ \ell(X,\theta ) \right] \\
+        \lambda =-\dfrac{ 1 }{ 2 } \sqrt{\dfrac{ var_{\hat{P}_n}(\ell(X,\theta )) }{ 2\rho /n } }
+    \end{cases}
+\end{align*}
+and gives (with strong duality):
+\begin{align*}
+    R_n(\theta ,\mathcal{P}_n)=&  \mathop{ \sup }\limits_{P\in\mathcal{P}_n }\mathbb{E}_P\left[ \ell(\theta ,X) \right] = \mathop{ \inf }\limits_{\lambda \leq 0,\mu }\theta _D(\lambda ,\mu ) \\
+    =& \mathbb{E}_{\hat{P}_n}\left[ \ell(X,\theta ) \right] + \sqrt{\dfrac{2\rho \mathrm{var}_{\hat{P}_n}(\ell(X,\theta )) }{  n } }
+\end{align*}
+
+And we revisit the solution $ p_i^* $:
+\begin{align*}
+    p_i^* = - \dfrac{ \ell(X_i,\theta )+\mu  }{ 2\lambda n } = & \dfrac{ 1 }{ n }+ \dfrac{ \sqrt{2\rho }(\ell(X_i,\theta )- \mathbb{E}_{\hat{P}_n}\left[ \ell(X,\theta ) \right] ) }{ n\sqrt{n} \sqrt{\mathrm{var}_{\hat{P}_n}(\ell(X,\theta ))} }  
+\end{align*}
+could satisfy $ p_i^*\geq 0 $ if the empirical variance is large enough \& $ \rho  $ is chosen small enough.
+
+
+\section{Derive the dual formulation of the Sinkhorn distance}
+
+\subsection{}
+The Lagrangian is given by:
+\begin{align*}
+    \mathcal{L}(\gamma ; u,v)=& \left\langle \gamma ,C \right\rangle -\varepsilon  H(\gamma ) + u'(\gamma \mathbf{1}-a) + v'(\gamma ^T\mathbf{1}-b) 
+\end{align*}
+miimizing w.r.t. $ \gamma  $ gives the optimality condition: 
+\begin{align*}
+    \dfrac{\partial^{} \mathcal{L} }{\partial \gamma_{ij} }=&  C_{ij} + \varepsilon (\log \gamma_{ij} + 1) + u_i + v_j = 0 \Rightarrow \gamma_{ij} = \exp\left( -\dfrac{ C_{ij} + u_i + v_j }{ \varepsilon }  - 1 \right)
+\end{align*}
+And we have dual problem:
+\begin{align*}
+    \mathop{ \inf }\limits_{u,v}\mathcal{L}(\gamma ; u,v) = & \mathop{ \inf }\limits_{u,v}\left\langle \gamma ,C \right\rangle -\varepsilon  H(\gamma ) + u'(\gamma \mathbf{1}-a) + v'(\gamma ^T\mathbf{1}-b)\\
+    =& \mathop{ \inf }\limits_{u,v}\quad -u'a- v'b - \varepsilon \sum_{i,j}\exp\left( -\dfrac{ C_{ij} + u_i + v_j }{ \varepsilon }  - 1 \right)
+\end{align*}
+with re-parametrization $ u\mapsto -u - \varepsilon ,\quad v\mapsto -v $ and omitting constant, we have dual problem:
+\begin{align*}
+    \mathop{ \inf }\limits_{u,v}\quad  u'a+v'b  - \varepsilon \sum_{i,j}\exp\left( \dfrac{   u_i + v_j -C_{ij}}{ \varepsilon }   \right)
+\end{align*}
+
+\subsection{}
+
+Once the optimal $ u^* $ is known, it's left to solve for $ v^* $:
+\begin{align*}
+     &\mathop{ \inf }\limits_{v}\quad  v'b  - \varepsilon \sum_{i,j}\exp\left( \dfrac{   u_i^* + v_j -C_{ij}}{ \varepsilon }   \right)v \\
+      \Rightarrow& v_j^* = \dfrac{ \varepsilon  }{ b_j } \sum_{i}\exp\left( \dfrac{   u_i^* + v_j^* -C_{ij}}{ \varepsilon }   \right)  \Rightarrow v^* ,\quad \forall j
+\end{align*}
+which can be solved by fixed point iteration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

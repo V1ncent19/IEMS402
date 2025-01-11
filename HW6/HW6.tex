@@ -1,0 +1,405 @@
+\documentclass[11pt,a4paper]{ctexart}
+%以下为所使用的宏包
+\usepackage{ulem}%下划线
+\usepackage{amsmath,amsfonts,amssymb,amsthm,amsbsy}%数学符号
+\usepackage{graphicx}%插入图片
+\usepackage{booktabs}%三线表
+%\usepackage{indentfirst}%首行缩进
+\usepackage{tikz}%作图
+\usepackage{appendix}%附录
+\usepackage{array}%多行公式/数组
+\usepackage{makecell}%表格缩并
+\usepackage{siunitx}%SI单位--\SI{number}{unit}
+\usepackage{mathrsfs}%数学字体
+\usepackage{enumitem}%列表间距
+\usepackage{multirow}%列表横向合并单元格
+\usepackage[colorlinks,linkcolor=red,anchorcolor=blue,citecolor=green]{hyperref}%超链接引用
+\usepackage{float}%图片、表格位置排版
+\usepackage{pict2e,keyval,fp,diagbox}%带有斜线的表格
+\usepackage{fancyvrb,listings}%设置代码插入环境
+\usepackage{minted}%代码环境设置
+\usepackage{fontspec}%字体设置
+\usepackage{color,xcolor}%颜色设置
+\usepackage{titlesec} %自定义标题格式
+\usepackage{tabularx}%列表扩展
+\usepackage{authblk}%titlepage作者信息
+\usepackage{nicematrix}%更好的矩阵标定
+\usepackage{fbox}%更多浮动体盒子
+
+
+
+%以下是页边距设置
+\usepackage[left=0.5in,right=0.5in,top=0.81in,bottom=0.8in]{geometry}
+
+%以下是段行设置
+\linespread{1.4}%行距
+\setlength{\parskip}{0.1\baselineskip}%段距
+\setlength{\parindent}{2em}%缩进
+
+
+%其他设置
+\numberwithin{equation}{section}%公式按照章节编号
+\newenvironment{point}{\raggedright$\blacktriangleright$}{}
+\newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
+
+
+%代码环境\lst设置
+\definecolor{CodeBlue}{HTML}{268BD2}
+\definecolor{CodeBlue2}{HTML}{0000CD}
+\definecolor{CodeGreen}{HTML}{2AA1A2}
+\definecolor{CodeRed}{HTML}{CB4B16}
+\definecolor{CodeYellow}{HTML}{B58900}
+\definecolor{CodePurPle}{HTML}{D33682}
+\definecolor{CodeGreen2}{HTML}{859900}
+\lstset{
+    basicstyle=\tt,%字体设置
+    numbers=left, %设置行号位置
+    numberstyle=\tiny\color{black}, %设置行号大小
+    keywordstyle=\color{black}, %设置关键字颜色
+    stringstyle=\color{CodeRed}, %设置字符串颜色
+    commentstyle=\color{CodeGreen}, %设置注释颜色
+    frame=single, %设置边框格式
+    escapeinside=`, %逃逸字符(1左面的键)，用于显示中文
+    %breaklines, %自动折行
+    extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+    xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+    tabsize=4, %设置tab空格数
+    showspaces=false, %不显示空格
+    emph={TRUE,FALSE,NULL,NAN,NA,<-,},emphstyle=\color{CodeBlue2}, %其他高亮}
+}
+
+
+%节标题格式设置
+\titleformat{\section}[block]{\large\bfseries}{Exercise \arabic{section}}{1em}{}[]
+\titleformat{\subsection}[block]{}{    \arabic{section}.(\alph{subsection})}{0.3em}{}[]
+\titleformat{\subsubsection}[block]{\normalsize}{    \arabic{section}.(\alph{subsection}).(\roman{subsubsection})}{0.3em}{}[]
+% \titleformat{\paragraph}[block]{\small\bfseries}{[\arabic{paragraph}]}{1em}{}[]
+
+
+% \titleformat{\sectioncommand}[shape]{format}{title-label}{sep}{before-title}[after-title]
+
+
+
+% 中文字号
+% 初号42pt, 小初36pt, 一号26pt, 小一24pt, 二号22pt, 小二18pt, 三号16pt, 小三15pt, 四号14pt, 小四12pt, 五号10.5pt, 小五9pt
+
+
+\begin{document}
+
+\begin{center}\thispagestyle{plain}
+
+{\LARGE\textbf{IEMS 402 Statistical Learning - 2025 Winter}}
+
+{\Large\textbf{HW4}}
+
+Tuorui Peng\footnote{TuoruiPeng2028@u.northwestern.edu}
+\end{center}
+
+\thispagestyle{myheadings}\markright{Compiled using \LaTeX}
+\pagestyle{myheadings}\markright{Tuorui Peng}
+
+
+
+
+\section{Fast Rate Generalization Error in the Realizable Setting}
+
+For $ 0 $-$ 1 $ loss, we notice that: if $ L(h^*)=0 $ is reachable, then it means that $ \exists h_*\in \mathcal{H} $ s.t. $ y^{(i)} = h_*(x^{(i)}) $ a.s. (i.e. $ h_* $ is the underlying truth, and the data generation $ y|x $ has no randomness in the sense of a.s.). Then we have
+\begin{align*}
+    \hat{L}(h) = \dfrac{ 1 }{ n }\sum_{i=1}^n \ell\left((x^{(i)},y^{(i)}),h\right)  =& \dfrac{ 1 }{ n }\sum_{i=1}^n \ell\left((x^{(i)},h_*(x^{(i)}), h)\right) 
+\end{align*}
+can reach $ \hat{L}(h) = 0 $ in some non-empty set $ H\subset \mathcal{H} $ (because we would have relation $ h_* \in \{h^*\} \subseteq H \subseteq \mathcal{H} $). So the event of interest is that $ \hat{h}\in H\backslash \{h^*\} $
+
+For any $ h\in\mathcal{H} $ s.t. $ L(h) \geq t $, we have:
+\begin{align*}
+     \mathbb{P}\left( \hat{L}(h) = 0  \right) =& \mathbb{P}\left( \forall i:\, \ell\big((x^{(i)}, y^{(i)}), h\big) = 0 \right) \\
+     =& \mathbb{P}\left( \ell\big((x,h_*(x)) , h\big) = 0 \right)^n   \\
+     =& \big(1- \mathbb{E}\left[ \ell\big((x,h_*(x)) , h\big) \right]  \big)^n \\
+     \leq & (1-t)^n \leq \exp\left(-nt\right)
+\end{align*}
+So we have
+\begin{align*}
+    \mathbb{P}\left( L(\hat{h}) \geq t \right) =& \mathbb{P}\left( \exists h:\,L(h) \geq t,\, \hat{L}(h)=0  \right)  \\
+    \leq & \sum_{h:\,L(h) \geq t} \mathbb{P}\left( \hat{L}(h) = 0  \right) \\
+    \leq & \left\vert \mathcal{H} \right\vert  \cdot \exp\left( -nt \right)
+\end{align*}
+
+Now set $ \delta = \left\vert \mathcal{H} \right\vert  \cdot \exp\left( -nt \right)$ and we have
+\begin{align*}
+    L(\hat{h}) \leq \dfrac{ \log \left\vert \mathcal{H} \right\vert  + \log \frac{1}{\delta } }{ n }  
+\end{align*}
+
+
+% We have
+% \begin{align*}
+%     L(\hat{h}) =& \underbrace{L(\hat{h}) - \hat{L}(\hat{h})}_{\mathrm{ I } } +\underbrace{ \hat{L}(\hat{h}) - \hat{L}(h^*)}_\mathrm{ II }  + \underbrace{\hat{L}(h^*)}_\mathrm{ III }  ,
+% \end{align*}
+% in which $ \mathrm{ II } \leq 0 $. And for $ \mathrm{ I } $ and $ \mathrm{ III } $, we have
+% \begin{align*}
+%      \left\vert L(\hat{h}) - \hat{L}(\hat{h}) \right\vert \vee \left\vert \hat{L}(h^*) - L(h^*) \right\vert \leq \sup_{h \in \mathcal{H}} \left| L(h) - \hat{L}(h) \right|
+% \end{align*}
+% while for $ \sup_{h \in \mathcal{H}} \left| L(h) - \hat{L}(h) \right| $ we have by Hoeffding's inequality
+%     \begin{align*}
+%         & \mathbb{P}\left( \sup_{h \in \mathcal{H}} \left| \frac{1}{n} \sum_{i=1}^n \ell((x_i, y_i),h) - \mathbb{E}_{(x,y) \sim P} [\ell((x, y),h)] \right| \geq t \right) \\
+%         =& \mathbb{P}\left( \exists h \in \mathcal{H},\, \left| \frac{1}{n} \sum_{i=1}^n \ell((x_i, y_i),h) - \mathbb{E}_{(x,y) \sim P} [\ell((x, y),h)] \right| \geq t \right) \\
+%         \leq & \left\vert \mathcal{H} \right\vert \cdot \exp\left( -\frac{nt^2}{2} \right) 
+%     \end{align*}
+
+% Together, we have $ L(\hat{h}) \leq\left\vert L(\hat{h}) - \hat{L}(\hat{h}) \right\vert + \left\vert \hat{L}(h^*) - L(h^*) \right\vert  $ and thus
+% \begin{align*}
+%     \mathbb{P}\left( L(\hat{h}) \geq t \right) \leq &  \mathbb{P}\left( \left\vert L(\hat{h}) - \hat{L}(\hat{h}) \right\vert + \left\vert \hat{L}(h^*) - L(h^*) \right\vert \leq t \right) \\
+%     \leq & \mathbb{P}\left( 2\sup_{h \in \mathcal{H}} \left| L(h) - \hat{L}(h) \right| \leq t \right) \\
+%     \leq  &2\left\vert \mathcal{H} \right\vert \cdot \exp\left( -\frac{nt^2}{2} \right) 
+% \end{align*}
+% setting $2\left\vert \mathcal{H} \right\vert \cdot \exp\left( -\frac{nt^2}{2} \right)  = \delta   $ we have
+% \begin{align*}
+%      L(\hat{h})\leq \sqrt{\dfrac{ 2\log \left\vert H \right\vert + 2\log \frac{2}{\delta }  }{ n } }
+% \end{align*}
+
+
+
+\section{Generalization Error near Interpolate}
+
+\subsection{}
+
+Note that for any fixed $ h $, we have $ \mathbb{E}\left[ \hat{L}_n(h) \right] = L(h) = \mathbb{E}\left[ \ell(h) \right]   $ and we have
+\begin{align*}
+    var(\ell(h)) =& \mathbb{E}\left[ \ell(h)^2 \right] - \mathbb{E}\left[ \ell(h) \right]^2 \leq \mathbb{E}\left[ \ell(h) \right] = L(h)
+\end{align*}
+since $ \ell(h) \in [0,1] $. Now by Bernstein's inequality we proved in the previous homework, we have
+\begin{align*}
+    \mathbb{P}\left( \hat{L}(h)-L(h) \geq \varepsilon  \right) \leq \exp\left( -\frac{n\varepsilon^2}{2( var(\ell(h)) + \varepsilon /3 )} \right) \leq  \exp\left( -\frac{n\varepsilon^2}{2( L(h) + \varepsilon /3 )} \right)
+\end{align*}
+
+
+\subsection{}
+
+By the same argument we also have inequality for the other side:
+\begin{align*}
+    \mathbb{P}\left( \hat{L}(h)-L(h) \leq -\varepsilon  \right) \leq & \exp\left( -\frac{n\varepsilon^2}{2( L(h) + \varepsilon /3 )} \right) 
+\end{align*}
+
+Substitute $ \hat{L}_n(h)\mapsto \hat{L}_n(h) - (L(h) - \varepsilon (h)-\varepsilon ) $ and we have
+\begin{align*}
+    \mathbb{P}\left( \hat{L}(h) \leq \varepsilon(h)   \right) \leq \mathbb{P}\left( \hat{L}(h)-L(h) \leq -\varepsilon   \right) \leq & \exp\left( -\frac{n\varepsilon^2}{2( \varepsilon (h)+\varepsilon + \varepsilon /3 )} \right) = \exp\left( -\frac{n\varepsilon^2}{2( \varepsilon (h)+4\varepsilon /3 )} \right) 
+\end{align*}
+
+\subsection{}
+
+Note that by (b), we have for all $ h $ satisfying $ L(h) \geq L(h^*)+2\varepsilon $ that
+\begin{align*}
+    \mathbb{P}\left( \hat{L}(h) \leq L(h^*)+\varepsilon \right) \leq & \exp\left( -\frac{n\varepsilon^2}{2( \varepsilon +4\varepsilon /3 )} \right) = \exp\left( -\frac{n\varepsilon^2}{2( L(h^*)+7\varepsilon /3 )} \right) 
+\end{align*}
+So we have
+\begin{align*}
+    \mathbb{P}\left( \hat{L}_n(\hat{h}_n) - L(h^*)\geq 2\varepsilon  \right) \leq & \mathbb{P}\left( \exists h:\, L(h) \geq L(h^*)+2\varepsilon,\,  \hat{L}(h) \leq L(h^*)+\varepsilon \right)   \\
+    \leq & \sum_{h: L(h) \geq L(h^*)+2\varepsilon} \mathbb{P}\left( \hat{L}(h) \leq L(h^*)+\varepsilon \right)  \\
+    \leq &\left\vert \mathcal{H} \right\vert  \exp\left( -\frac{n\varepsilon^2}{2( L(h^*)+7\varepsilon /3 )} \right) 
+\end{align*}
+
+On the other hand, by Hoeffding's inequality we have
+\begin{align*}
+    \mathbb{P}\left( \left\vert \hat{L}_n (\hat{h}_n) - L(\hat{h}_n) \right\vert \geq \varepsilon   \right) \leq & \mathbb{P}\left( \sup_{h\in\mathcal{H}} \left\vert \hat{L}_n (h) - L(h) \right\vert \geq \varepsilon  \right) \leq
+    \left\vert \mathcal{H} \right\vert  \exp\left( -\frac{n\varepsilon^2}{2} \right)
+\end{align*}
+
+Together, we have
+\begin{align*}
+    \mathbb{P}\left( L(\hat{h}_n)-L(h^*)\leq \varepsilon  \right) \geq &\mathbb{P}\left( \hat{L}_n(\hat{h}_n) - L(h^*)\geq 2\varepsilon ,  L(\hat{h}_n)-\hat{L}_n (\hat{h}_n) \leq \varepsilon  \right)\\
+    \geq & 1- \left\vert \mathcal{H} \right\vert  \exp\left( -\frac{n\varepsilon^2}{2( L(h^*)+7\varepsilon /3 )} \right) - \left\vert \mathcal{H} \right\vert  \exp\left( -\frac{n\varepsilon^2}{2} \right)
+\end{align*}
+
+Note that for large $ \varepsilon  $, the above probability bound is dominated by the second term, so we consider setting $ \delta = \left\vert \mathcal{H} \right\vert  \exp\left( -\frac{n\varepsilon^2}{2( L(h^*)+7\varepsilon /3 )} \right)  $ and we have
+\begin{align*}
+    w.p. \geq 1-\delta ,\quad L(\hat{h}_n)-L(h^*) \lesssim \sqrt{\dfrac{ L(h^*)\log (\left\vert \mathcal{H} \right\vert / \delta  ) }{ n } } + \dfrac{ \log (\left\vert \mathcal{H} \right\vert / \delta  ) }{ n } .
+\end{align*}
+
+
+\subsection{}
+
+The naive approach based on Hoeffding's inequality would give us
+\begin{align*}
+     L(\hat{h}_n) - L(h^* )\lesssim  \sqrt{\dfrac{ \log \left\vert H \right\vert + \log \frac{1}{\delta }  }{ n } }
+\end{align*}
+
+By comparing the two bounds, we notice that: when we have $ L(h^*)\ll 1/\log (\left\vert \mathcal{H} \right\vert / \delta  ) $ the bound is dominated by $ O(n^{-1}) $, which is a stronger bound than the naive approach $ O(n^{-1/2}) $, leading to a faster rate of convergence.
+
+\section{Random Matrix}
+
+\subsection{}
+Denote the SVD of $ A $ as
+\begin{align*}
+    A= U\Sigma V^T 
+\end{align*}
+and thus
+\begin{align*}
+    \left\Vert A \right\Vert _\mathrm{ op} = \sigma _1 = \mathop{ \max }\limits_{u\in S^{m-1},v\in S^{n-1}}\mathop{ \max }\limits_{u\in S^{m-1},v\in S^{n-1}} u'Av = \mathop{ \max }\limits_{u\in S^{m-1},v\in S^{n-1}}\left\langle Au, v \right\rangle 
+\end{align*}
+by SVD.
+
+
+\subsection{}
+
+(For this part I feel that the best I can do is $ \sim \dfrac{ 1 }{ 1-2\varepsilon  }  $ in stead of $ \sim \dfrac{ 1 }{ (1-\varepsilon )^2 }  $)
+
+
+With $ \varepsilon  $-net of $ S^{m-1} $ and $ S^{n-1} $ denoted $ \mathcal{N}_1 $ and $ \mathcal{N}_2 $ respectively. And denote the maximizer of $ \left\langle Au, v' \right\rangle  $ as $ (u^*,v^*) $, we have some $ u_1\in \mathcal{N}_1 $ and $ v_1\in \mathcal{N}_2 $ s.t.
+\begin{align*}
+    \left\Vert u_1-u^* \right\Vert \leq \varepsilon ,\quad \left\Vert v_1-v^* \right\Vert \leq \varepsilon
+\end{align*}
+
+
+Then we have for $ u^*\in S^{m-1},v^*\in S^{n-1} $ and their corresponding $ u_1,v_1 $ we have
+\begin{align*}
+    \left\Vert A \right\Vert _\mathrm{ op } =& \left\langle Au,v \right\rangle \\
+    =& \left\langle A(u-u_1+u_1), (v-v_1+v_1) \right\rangle \\
+    =& \left\langle Au_1, v_1 \right\rangle + \left\langle A(u-u_1), v_1 \right\rangle + \left\langle Au, (v-v_1) \right\rangle \\
+    \leq & \mathop{ \max }\limits_{u\in \mathcal{U},v\in \mathcal{V}}\left\langle Au, v \right\rangle + \left\Vert A \right\Vert _\mathrm{ op }\varepsilon  + \left\Vert A \right\Vert _\mathrm{ op }\varepsilon\\
+     \Rightarrow  \left\Vert A \right\Vert _\mathrm{ op }\leq & \dfrac{ 1 }{ 1-2\varepsilon  }  \mathop{ \max }\limits_{u\in \mathcal{U},v\in \mathcal{V}}\left\langle Au, v \right\rangle
+\end{align*}
+
+
+\subsection{}
+
+Note that for any $ u\in S^{m-1},v\in S^{n-1} $, we have
+\begin{align*}
+    \left\langle Au,v \right\rangle \sim N(0,1)  
+\end{align*}
+
+And for $ \varepsilon  $ covering set of $ S^{m-1} $ and $ S^{n-1} $, we have
+\begin{align*}
+    \left\vert \mathcal{U } \right\vert \leq &  \left\vert \mathcal{N}(B_m(1)), \varepsilon  \right\vert \leq \left( 1 + \dfrac{ 2 }{ \varepsilon  } \right)^m \\
+    \left\vert \mathcal{V } \right\vert \leq &  \left\vert \mathcal{N}(B_n(1)), \varepsilon  \right\vert \leq \left( 1 + \dfrac{ 2 }{ \varepsilon  } \right)^n
+\end{align*}
+
+We have
+\begin{align*}
+    \mathbb{E}\left[ \left\Vert A \right\Vert _\mathrm{ op } \right] \leq & \dfrac{ 1 }{ 1-2\varepsilon  }  \mathbb{E}\left[ \mathop{ \max }\limits_{u\in \mathcal{U},v\in \mathcal{V}}\left\langle Au, v \right\rangle \right] \\ 
+    \lesssim &\dfrac{ 1 }{ 1-2\varepsilon  }\sqrt{\log \left\vert U \right\vert + \log \left\vert V \right\vert } \\
+    \lesssim &\sqrt{m} + \sqrt{n}
+\end{align*}
+where the last step can be done by taking some small constant $ \varepsilon  $.
+
+\subsection{}
+
+For $ S^{n-1} $, we construct a $ \sqrt{2} $-net $ \mathcal{N} $ formed by all unit vectors. This can be easily verified to be a covering by noticing that for $ \sum_{i=1}^n x_i^2 \leq 1 $ with WLOG $ x_1\geq 0 $ we have
+\begin{align*}
+     (1-x_1^2) + \sum_{i=2}^n x_i^2 \leq 2
+\end{align*}
+Using this method we obtain covering for $ S^{m-1} $ and $ S^{n-1} $respectively, and we have their size bounded by $ (1+2/\sqrt{2})^m $ and $ (1+2/\sqrt{2})^n $ respectively.
+
+With this construction, we have
+\begin{align*}
+    \left\langle u_i,u_j \right\rangle =\delta _{ij},\quad \left\langle v_i,v_j \right\rangle =\delta _{ij},\quad u_i,u_j\in \mathcal{N}_1;\,v_i,v_j\in \mathcal{N}_2 
+\end{align*}
+and thus for any $ u_1 ,u_2\in \mathcal{N}_1 $ and $ v_1,v_2\in \mathcal{N}_2 $ we have
+\begin{align*}
+    cov\left( \left\langle Au_1,v_1 \right\rangle , \left\langle Au_2,v_2 \right\rangle  \right) = & cov( \sum_{i=1}^m u_{1i}v_{1j}A_{ij}, \sum_{i=1}^n u_{2i}v_{2j}A_{ij} ) \\
+    =& \sum_{i=1}^m \sum_{j=1}^n u_{1i}v_{1j}u_{2i}v_{2j}\\
+    =& \left\langle u_1,u_2 \right\rangle \left\langle v_1,v_2 \right\rangle\\
+    =& 0
+\end{align*}
+i.e. any two $ \left\langle Au_1,v_1 \right\rangle , \left\langle Au_2,v_2 \right\rangle  $ are uncorrelated. Using this covering set, we have
+\begin{align*}
+    \mathbb{E}\left[ \left\Vert A \right\Vert _\mathrm{ op }  \right] \geq & \mathbb{E}\left[ \sup_{u\in \mathcal{U},v\in \mathcal{V}}\left\langle Au, v \right\rangle  \right] \\
+    \mathop{ {\gtrsim} }\limits^{(*)}  & \sqrt{\log \left\vert \mathcal{U} \right\vert + \log \left\vert \mathcal{V} \right\vert } \\
+    \gtrsim & \sqrt{m} + \sqrt{n}
+\end{align*}
+where $ (*) $ by Martin J. Wainwright's book, page 53, Exercise 2.11 (Upper and lower bounds for Gaussian maxima).
+
+
+As a result, we have
+\begin{align*}
+    \mathbb{E}\left[ \left\Vert A \right\Vert _\mathrm{ op }  \right]  \asymp \sqrt{m} + \sqrt{n}  
+\end{align*}
+
+
+\section{Rademacher Complexity Leads to Suboptimal Bounds}
+
+\subsection{}
+
+We have by CLT:
+\begin{align*}
+    \sqrt{n} (\hat{\theta }-\theta ) \xrightarrow{d} N(0,I)
+\end{align*}
+and we have
+\begin{align*}
+    \mathbb{E}\left[ \left\Vert \hat{\theta }-\theta  \right\Vert _2^2  \right]  =& \dfrac{ d }{ n } 
+\end{align*}
+
+
+
+\subsection{}
+
+We have the hypothesis space $ \Theta = \mathbb{R}^d $. We consider the following:
+\begin{enumerate}[topsep=2pt,itemsep=2pt]
+    \item Bound covering number: We consider the covering of $ \mathbb{B}_n(\delta , \Theta) $ under norm $ \dfrac{ 1 }{ n }\sum_{i=1}^n (X_i - \, \cdot \, )^2  $:
+    \begin{align*}
+        \log N(t , \mathbb{B}_n(\delta , \Theta), \left\Vert \, \cdot \,  \right\Vert _2) \leq & d\log (1 + \dfrac{ 2\delta  }{ t } ).
+    \end{align*}
+    \item We determine some $ \delta  $ satisfying the following:
+    \begin{align*}
+        &\dfrac{ 16 }{ \sqrt{n} }\int_0^{\delta } \sqrt{\log N(t , \mathbb{B}_n(\delta , \Theta), \left\Vert \, \cdot \,  \right\Vert _2) } \,\mathrm{d}t \leq \dfrac{ \delta ^2 }{ 4 } \\
+        \Leftarrow& \dfrac{ 1 }{ \sqrt{n} }\int_0^{\delta } \sqrt{d\log (1 + \dfrac{ 2t }{ \delta  } ) } \,\mathrm{d}t \lesssim \delta ^2\\
+        \Leftarrow& \dfrac{ \sqrt{d} }{ \sqrt{n} }\delta \lesssim \delta ^2\\
+        \Leftarrow& \delta \gtrsim \sqrt{\dfrac{ d }{ n } }
+    \end{align*}
+    \item By Martin J. Wainwright's book, page 426, Corollary 13.7, we have
+    \begin{align*}
+        \mathbb{E}\left[ \left\Vert \hat{\theta } - \theta  \right\Vert _n^2 \right]  \lesssim \dfrac{ d }{ n }
+    \end{align*}
+
+\end{enumerate}
+
+So we see that we have the same optimal rate of convergence, but the constant is undetermined.
+    
+
+
+
+
+
+
+
+
+
+\section{Curse of Dimensionality}
+
+
+We consider the following segment to $ [-B,+B] $ and partition of $ [-R,+R]^d $:
+\begin{itemize}[topsep=2pt,itemsep=0pt]
+    \item $ [-B,+B] $ into segments of length $ \varepsilon   $, which gives $ \lceil \dfrac{ 2B }{ \varepsilon  }\rceil $ segments (with trivial edges omitted). The set is denoted as $ \mathcal{S} = \{S_1,\ldots,S_{\lceil \dfrac{ 2B }{ \varepsilon  }\rceil }\} $.
+    \item $ [-R,+R]^d $ into cubes of side length $ \varepsilon/2\rho   $, which gives $ \lceil \dfrac{ 4\rho (R+\varepsilon ) }{ \varepsilon  }\rceil ^d $ cubes (with trivial edges omitted). So we haved a lattice $ \mathcal{C} $ of side length $ \varepsilon/\rho   $.
+\end{itemize}
+
+For any function $ f $ in function class $ \mathcal{F}: [-R,+R]^d \rightarrow [-B,+B] $, there exists some $ S_f\in \mathcal{S} $ s.t. $ \left\vert f(0) - S_f  \right\vert \leq \varepsilon /2 $. Next, for any $ x\in \mathcal{C}$, we do the following:
+\begin{enumerate}[topsep=2pt,itemsep=2pt]
+    \item Find the $ S_x\in \mathcal{S} $ s.t. $ \left\vert f(x) - S_x  \right\vert \leq \varepsilon /2 $.
+    \item For any $ x'\in x + \varepsilon/2\rho \cdot  [-1,1]^d $, we have 
+    \begin{align*}
+        \left\vert f(x')- S_x \right\vert \leq \left\vert f(x')- f(x) \right\vert + \left\vert f(x) - S_x \right\vert \leq \varepsilon/2 + \varepsilon /2 = \varepsilon 
+    \end{align*}
+    So at least one of $ S_x, S_x +\varepsilon , S_x - \varepsilon  $ would satisfy:
+    \begin{align*}
+        \forall x'\in x + \varepsilon/2\rho \cdot  [-1,1]^d,\quad \exists S_{x'}\in \{S_x, S_x +\varepsilon , S_x - \varepsilon  \} \quad \left\vert f(x')- S_{x'} \right\vert \leq \varepsilon
+    \end{align*}
+\end{enumerate}
+    By doing so iteratively, we can determine that there are $ 3^{\left\vert \mathcal{C} \right\vert } $ possible functions in the covering set (after $ f(0) $ is given).
+
+
+So in total, we have the size of the covering set begin:
+\begin{align*}
+    \log \mathcal{N}(\mathcal{F},\varepsilon , \left\Vert \, \cdot \,  \right\Vert _\infty ) \leq & \log \left[ \lceil \dfrac{ 2B }{ \varepsilon  }\rceil \times 3^{\left\vert \mathcal{C} \right\vert } \vee 1 \right] \\
+    \leq & \log \left[ \lceil \dfrac{ 2B }{ \varepsilon  }\rceil \times 3^{\lceil \dfrac{ 4\rho (R+\varepsilon ) }{ \varepsilon  }\rceil ^d } \vee 1\right]\\
+    =& 0 \vee \left[ \lceil \dfrac{ 4\rho (R+\varepsilon ) }{ \varepsilon  }\rceil ^d  \log 3 + \log \lceil \dfrac{ 2B }{ \varepsilon  }\rceil \right]
+\end{align*}
+(which is a stronger bound than required in the homework question).
+
+
+
+    
+
+    
+
+    
+
+
+\end{document}

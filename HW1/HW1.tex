@@ -43,6 +43,7 @@
 \newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
 
 
+
 %代码环境\lst设置
 \definecolor{CodeBlue}{HTML}{268BD2}
 \definecolor{CodeBlue2}{HTML}{0000CD}
@@ -274,15 +275,24 @@ and note that the decision boundary is determined by the $ (\theta ,\theta _0) $
 
 The Lagrangian can be written as:
 \begin{align*}
-    \mathcal{L}(\theta ,\theta _0,\alpha_1^n,\kappa  )=& \dfrac{ 1 }{ 2 }\left\Vert \theta  \right\Vert ^2 - \sum_{i=1}^n \alpha _i \left( y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 \right)  - \kappa \left( \left\Vert \theta  \right\Vert -\dfrac{ 1 }{ M }  \right)
+    \mathcal{L}(\theta ,\theta _0,\alpha_1^n  )=& \dfrac{ 1 }{ 2 }\left\Vert \theta  \right\Vert ^2 - \sum_{i=1}^n \alpha _i \left( y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 \right) 
 \end{align*}
-and the optimization problem can be solved by minimizing the Lagrangian w.r.t. $ \theta ,\theta _0 $ and maximizing w.r.t. $ \alpha_1^n $.
+and the optimization problem can be solved by minimizing the Lagrangian w.r.t. $ \theta ,\theta _0 $ 
 \begin{align*}
     \dfrac{ \partial \mathcal{L} }{ \partial \theta  }=& \theta - \sum_{i=1}^n \alpha _i y^{(i)}x^{(i)} =0\\
-    \dfrac{ \partial \mathcal{L} }{ \partial \theta _0 }=& - \sum_{i=1}^n \alpha _i y^{(i)} =0\\
-    \dfrac{ \partial \mathcal{L} }{ \partial \alpha _i }=& y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 =0 \\
-    \dfrac{ \partial \mathcal{L} }{ \partial \kappa  }=& \left\Vert \theta  \right\Vert -\dfrac{ 1 }{ M } =0
+    \dfrac{ \partial \mathcal{L} }{ \partial \theta _0 }=& - \sum_{i=1}^n \alpha _i y^{(i)} =0
+    % \dfrac{ \partial \mathcal{L} }{ \partial \alpha _i }=& y^{(i)}(\theta 'x^{(i)} +\theta _0) -1 =0 \\
+    % \dfrac{ \partial \mathcal{L} }{ \partial \kappa  }=& \left\Vert \theta  \right\Vert -\dfrac{ 1 }{ M } =0
 \end{align*}
+to get the dual problem:
+\begin{align*}
+     \theta _D(\alpha )=& -\dfrac{ 1 }{ 2 }\sum_{i,j=1}^n \alpha _i \alpha _j y^{(i)}y^{(j)}x^{(i)'}x^{(j)} + \sum_{i=1}^n \alpha _i \\
+     s.t. & \alpha _i \geq 0, \sum_{i=1}^n \alpha _i y^{(i)} =0
+\end{align*}
+
+
+The dual problem is usually easier to solve because we can see that the dual problem has less (non-trivial) constraints.
+
 
 
 

@@ -1,0 +1,269 @@
+\documentclass[11pt,a4paper]{ctexart}
+%以下为所使用的宏包
+\usepackage{ulem}%下划线
+\usepackage{amsmath,amsfonts,amssymb,amsthm,amsbsy}%数学符号
+\usepackage{graphicx}%插入图片
+\usepackage{booktabs}%三线表
+%\usepackage{indentfirst}%首行缩进
+\usepackage{tikz}%作图
+\usepackage{appendix}%附录
+\usepackage{array}%多行公式/数组
+\usepackage{makecell}%表格缩并
+\usepackage{siunitx}%SI单位--\SI{number}{unit}
+\usepackage{mathrsfs}%数学字体
+\usepackage{enumitem}%列表间距
+\usepackage{multirow}%列表横向合并单元格
+\usepackage[colorlinks,linkcolor=red,anchorcolor=blue,citecolor=green]{hyperref}%超链接引用
+\usepackage{float}%图片、表格位置排版
+\usepackage{pict2e,keyval,fp,diagbox}%带有斜线的表格
+\usepackage{fancyvrb,listings}%设置代码插入环境
+\usepackage{minted}%代码环境设置
+\usepackage{fontspec}%字体设置
+\usepackage{color,xcolor}%颜色设置
+\usepackage{titlesec} %自定义标题格式
+\usepackage{tabularx}%列表扩展
+\usepackage{authblk}%titlepage作者信息
+\usepackage{nicematrix}%更好的矩阵标定
+\usepackage{fbox}%更多浮动体盒子
+
+
+
+%以下是页边距设置
+\usepackage[left=0.5in,right=0.5in,top=0.81in,bottom=0.8in]{geometry}
+
+%以下是段行设置
+\linespread{1.4}%行距
+\setlength{\parskip}{0.1\baselineskip}%段距
+\setlength{\parindent}{2em}%缩进
+
+
+%其他设置
+\numberwithin{equation}{section}%公式按照章节编号
+\newenvironment{point}{\raggedright$\blacktriangleright$}{}
+\newenvironment{algorithm}[1]{\vspace{12pt} \hrule\hrule \vspace{3pt} \noindent\textbf{\color[HTML]{E63F00}Algorithm } \,\textit{#1} \vspace{3pt} \hrule\vspace{6pt}}{\vspace{6pt}\hrule\hrule \vspace{12pt}} % 算法伪代码格式环境
+
+
+%代码环境\lst设置
+\definecolor{CodeBlue}{HTML}{268BD2}
+\definecolor{CodeBlue2}{HTML}{0000CD}
+\definecolor{CodeGreen}{HTML}{2AA1A2}
+\definecolor{CodeRed}{HTML}{CB4B16}
+\definecolor{CodeYellow}{HTML}{B58900}
+\definecolor{CodePurPle}{HTML}{D33682}
+\definecolor{CodeGreen2}{HTML}{859900}
+\lstset{
+    basicstyle=\tt,%字体设置
+    numbers=left, %设置行号位置
+    numberstyle=\tiny\color{black}, %设置行号大小
+    keywordstyle=\color{black}, %设置关键字颜色
+    stringstyle=\color{CodeRed}, %设置字符串颜色
+    commentstyle=\color{CodeGreen}, %设置注释颜色
+    frame=single, %设置边框格式
+    escapeinside=`, %逃逸字符(1左面的键)，用于显示中文
+    %breaklines, %自动折行
+    extendedchars=false, %解决代码跨页时，章节标题，页眉等汉字不显示的问题
+    xleftmargin=2em,xrightmargin=2em, aboveskip=1em, %设置边距
+    tabsize=4, %设置tab空格数
+    showspaces=false, %不显示空格
+    emph={TRUE,FALSE,NULL,NAN,NA,<-,},emphstyle=\color{CodeBlue2}, %其他高亮}
+}
+
+
+%节标题格式设置
+\titleformat{\section}[block]{\large\bfseries}{Exercise \arabic{section}}{1em}{}[]
+\titleformat{\subsection}[block]{}{    \arabic{section}.(\alph{subsection})}{1em}{}[]
+% \titleformat{\subsubsection}[block]{\normalsize\bfseries}{    \arabic{subsection}-\alph{subsubsection}}{1em}{}[]
+% \titleformat{\paragraph}[block]{\small\bfseries}{[\arabic{paragraph}]}{1em}{}[]
+
+
+% \titleformat{\sectioncommand}[shape]{format}{title-label}{sep}{before-title}[after-title]
+
+
+
+% 中文字号
+% 初号42pt, 小初36pt, 一号26pt, 小一24pt, 二号22pt, 小二18pt, 三号16pt, 小三15pt, 四号14pt, 小四12pt, 五号10.5pt, 小五9pt
+
+
+\begin{document}
+
+\begin{center}\thispagestyle{plain}
+
+{\LARGE\textbf{IEMS 402 Statistical Learning - 2025 Winter}}
+
+{\Large\textbf{HW7}}
+
+Tuorui Peng\footnote{TuoruiPeng2028@u.northwestern.edu}
+\end{center}
+
+\thispagestyle{myheadings}\markright{Compiled using \LaTeX}
+\pagestyle{myheadings}\markright{Tuorui Peng}
+
+
+
+\section{Dvoretzky-Kiefer-Wolfowitz inequality via Uniform Bounds}
+
+
+\subsection{}
+
+For each given $ P $, consider the $ \{\varepsilon ,2\varepsilon ,\ldots, \lfloor 1/\varepsilon \rfloor \varepsilon \}  $ quantiles of $ P $, denoted by $ q_1, q_2, \ldots, q_m $, where $ m = \lfloor 1/\varepsilon \rfloor $. With this notation, we have
+\begin{align*}
+    \{ \mathbf{1}\{x\leq q_i\} \}_{i=1}^m 
+\end{align*}
+being a $ \varepsilon  $ covering of $ \mathcal{F}=\{ \mathbf{1}\{x\leq t\} \}_{t\in\mathbb{R}} $. Thus we have
+\begin{align*}
+    \sup_{P}\log N(\mathcal{F}, L_2(P), \varepsilon ) \leq \log m \lesssim \log (1+\dfrac{ 1 }{ \varepsilon  } )
+\end{align*}
+
+
+\subsection{}
+
+When upgrading to $ n $ points, the above covering number bound becomes
+\begin{align*}
+    \log N(\mathcal{F}^n, L_2(P), \varepsilon ) \lesssim n\log (1+\dfrac{ 1 }{ \varepsilon  } ) 
+\end{align*}
+
+
+
+With the covering number bound, we apply the following:
+
+\begin{align*}
+    R_n(\mathcal{F})= &\mathbb{E}\left[ \sup_{t\in \mathbb{R}} \left| \frac{1}{n} \sum_{i=1}^n \mathbf{1}\{X_i\leq t\} - P(t) \right| \right] \\
+    \leq& \dfrac{ 2 }{ n }  \mathbb{E}\left[ \mathop{ \sup }\limits_{F\in \mathcal{F}} \left\vert \left\langle \varepsilon , F_{X_1^n}(t) \right\rangle  \right\vert   \right] \\
+    \mathop{ \lesssim  }\limits^{\mathrm{ Dudley } } &\dfrac{ 1 }{ n }  \int_0^1 \sqrt{ \log N(\mathcal{F}^n, L_2(P), u ) } \,\mathrm{d}u\\
+    \lesssim & \int_0^1 \sqrt{n \log (1+\dfrac{ 1 }{ u } ) } \,\mathrm{d}u\\
+    \lesssim & \dfrac{ 1 }{ \sqrt{n} } 
+\end{align*}
+
+\subsection{}
+
+Note that $ P_n(\, \cdot \, ) $ is sub-Gaussian, we can apply the following:
+\begin{align*}
+    \left\vert \mathop{ \sup  }\limits_{t\in \mathbb{R}} \left\vert P_n(X\leq t) - P(X\leq t) \right\vert - \mathbb{E}\left[ \mathop{ \sup  }\limits_{t\in \mathbb{R}} \left\vert P_n(X\leq t) - P(X\leq t) \right\vert  \right] \right\vert  \leq \varepsilon \quad \text{w.p. at least } 1-2\exp \left( -\dfrac{ 2n\varepsilon^2 }{ C^2 } \right)
+\end{align*}
+i.e. with the above bound on expectation, we have
+\begin{align*}
+     \mathop{ \sup  }\limits_{t\in \mathbb{R}} \left\vert P_n(X\leq t) - P(X\leq t) \right\vert \geq \dfrac{ C }{ \sqrt{n} } +\varepsilon \quad \text{w.p. at most } 2\exp \left( -cn\varepsilon ^2 \right) 
+\end{align*}
+
+
+\section{}
+
+\begin{itemize}[topsep=2pt,itemsep=0pt]
+    \item Assume we have a set that form a $ 2\varepsilon  $ packing $ \mathcal{S}(2\varepsilon ) $ and we take any two points $ m_1, m_2 \in \mathcal{S}(2\varepsilon ) $ and any $ h\in \mathbb{B}(h_i,\varepsilon ) $, then
+    \begin{align*}
+        \left\Vert h-h_i \right\Vert \geq \left\Vert h_i-h_j \right\Vert  - \left\Vert h-h_i \right\Vert > 2 \varepsilon -\varepsilon =\varepsilon \quad\forall h\in \mathbb{B}(h_i,\varepsilon )
+    \end{align*}
+    which means that $ \mathcal{S}(2\varepsilon )\backslash \{h_i\} $ is not a $ \varepsilon  $-covering. By ranging over all such $ \mathcal{S} $ we would eventually have some set satisfying the maximal packing, however in any of the setting we see that $ \left\vert \mathcal{S} \right\vert \leq \left\vert \mathcal{N}(\varepsilon ) \right\vert $. And we can conclude that
+    \begin{align*}
+        M(2\varepsilon )\leq N(\varepsilon ) 
+    \end{align*}
+    \item Consider the maximal packing $ \mathcal{M}{\varepsilon } $. For any $ h\in\mathcal{H} $ we have
+    \begin{align*}
+        \exists h_i \in\mathcal{M} ,\,st. \left\Vert h-h_i \right\Vert \leq \varepsilon 
+    \end{align*}
+    (otherwise we have $ \mathcal{M}\cup \{h\} $ as a larger packing). Thus we directly see that this set forms a $ \varepsilon  $-covering, and we have
+    \begin{align*}
+         N(\varepsilon )\leq M(\varepsilon )
+    \end{align*}
+    
+\end{itemize}
+
+To summarize, we have
+\begin{align*}
+    M(2\varepsilon )\leq N(\varepsilon ) \leq M(\varepsilon ) 
+\end{align*}
+
+
+\section{}
+
+\begin{itemize}[topsep=2pt,itemsep=0pt]
+    \item For the minimal covering set $ \mathcal{N}(\Theta ) $ we have:
+    \begin{align*}
+        \mathrm{ vol }(\Theta )\leq \left\vert \mathcal{N}(\Theta ) \right\vert \cdot \mathrm{ vol }(B(\varepsilon ))  \Rightarrow \left\vert \mathcal{N}(\Theta ) \right\vert \geq \dfrac{ \mathrm{ vol }(\Theta ) }{ \mathrm{ vol }(B(\varepsilon )) }  
+    \end{align*}
+    \item For the maximal packing set $ \mathcal{M}(\Theta ) $ we have:
+    \begin{align*}
+        \mathrm{ vol }(\Theta + B(\varepsilon /2)) \geq \left\vert \mathcal{M}(\Theta ) \right\vert \cdot \mathrm{ vol }(B(\varepsilon ))  \Rightarrow \left\vert \mathcal{M}(\Theta ) \right\vert \leq \dfrac{ \mathrm{ vol }(\Theta + B(\varepsilon /2)) }{ \mathrm{ vol }(B(\varepsilon )) }  
+    \end{align*}
+
+\end{itemize}
+
+So we have
+\begin{align*}
+    \dfrac{ \mathrm{ vol }(\Theta ) }{ \mathrm{ vol }(B(\varepsilon )) }  \leq \left\vert \mathcal{N}(\Theta ) \right\vert \leq \left\vert \mathcal{M}(\Theta ) \right\vert \leq \dfrac{ \mathrm{ vol }(\Theta + B(\varepsilon /2)) }{ \mathrm{ vol }(B(\varepsilon )) } 
+\end{align*}
+
+
+\section{Covering Number of Sobolev Ellipsoid}
+
+
+    
+\subsection{}
+
+In this setting, we have for any pair $ \theta ^1 \in\tilde{\mathcal{E}} $ and any $ \theta \in \mathcal{E} $:
+\begin{align*}
+    \left\Vert \theta -\theta ^1 \right\Vert _2^2=& \sum_{i=1}^ t  (\theta _i-\theta _i^1)^2 + \sum_{i=t+1}^d  \theta _i^2 \\
+    \leq& \delta ^2 + \sum_{i=t+1}^d  \theta _i^2
+    \leq& \delta ^2 + \delta ^2\sum_{i=t+1}^d  \dfrac{ 1 }{ \mu _j }\\
+    \leq& 2\delta ^2
+\end{align*}
+i.e. by choosing $ t: \mu _t\leq \delta ^2 $, we have the $ \delta  $-covering of $ \tilde{\mathcal{E}} $ satisfying $ \sqrt{2}\delta  $-covering of $ \mathcal{E} $.
+
+
+\subsection{}
+
+As stated above, it suffices to bound the truncated ellipsoid $ \tilde{\mathcal{E}} $, which has "finite" dimension $ t $ and we know that the covering number of $ \tilde{\mathcal{E}} $ is bounded by
+\begin{align*}
+    N(\tilde{\mathcal{E}},\delta  ) \lesssim \left( \dfrac{ 1 }{\delta  } \right)^{t}
+\end{align*}
+in which $ t $ satisfies $ \mu _t = t^{-2\alpha } \asymp \delta   ^2  \Rightarrow t \asymp \delta   ^{-1/\alpha }  $.
+
+Adn we have
+\begin{align*}
+    N(\tilde{\mathcal{E}},\delta  ) \leq N(\tilde{\mathcal{E}},\delta /\sqrt{2} ) \lesssim \left( \dfrac{ \sqrt{2} }{ \delta  } \right)^{\delta  ^{-1/\alpha }}
+\end{align*}
+i.e.
+\begin{align*}
+    \log N(\tilde{\mathcal{E}},\delta  ) \lesssim \left(\dfrac{ 1 }{ \delta   } \right)^{ 1/\alpha } \log \dfrac{ 1 }{ \delta  }
+\end{align*}
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

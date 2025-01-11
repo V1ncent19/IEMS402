@@ -269,12 +269,64 @@ substitute this back to the above equation, we have
 
 \subsection{}
 
+By CLT, the propensity weighted estimator 
+\begin{align*}
+    \dfrac{ 1 }{ n }\sum_{i=1}^n \left[ \dfrac{ Y_i1\{A_i=1\} }{ e(X_i) } - \dfrac{ Y_i1\{A_i=0\} }{ 1-e(X_i) }   \right] \xrightarrow[]{\mathrm{d}} N( \tau, n\sigma ^2_\mathrm{ ps }  )
+\end{align*}
+where the variance is computed as follows:
+\begin{itemize}[topsep=2pt,itemsep=0pt]
+    \item Prepare for the calculation:
+    \begin{align*}
+        \mathbb{E}\left[ (1\{A_i=1\}-e(X_i)) Y_i |X_i=x  \right] =& 0\\ 
+        var((1\{A_i=1\}-e(X_i)) Y_i |X_i=x ) =& e(x)(1-e(x))\mathbb{E}\left[ Y_i^2 |X_i=x \right] \\
+        =& e(x)(1-e(x))\mathbb{E}\left[ (Y(1)1\{A=1\} + Y(0)1\{A=0\} )^2 |X=x \right] \\
+        =& e(x)(1-e(x))\big(  e(x)v_2(x,1)^2 + (1-e(x)) v_2(x,0)^2 \big)
+    \end{align*}
+    
+    
+\end{itemize}
 
+    
+\begin{align*}
+    \sigma ^2_\mathrm{ ps }=& var( \dfrac{ Y_i1\{A_i=1\} }{ e(X_i) } - \dfrac{ Y_i1\{A_i=0\} }{ 1-e(X_i) } )\\
+    =& var( \dfrac{ (1\{A_i=1\}-e(X_i)) Y_i }{ e(X_i)(1-e(X_i)) }  )\\
+    =& \mathbb{E}\left[ var( \dfrac{ (1\{A_i=1\}-e(X_i)) Y_i }{ e(X_i)(1-e(X_i)) } \big|X_i=x ) \right] + var\left( \mathbb{E}\left[ \dfrac{ (1\{A_i=1\}-e(X_i)) Y_i }{ e(X_i)(1-e(X_i)) } \big|X_i=x \right] \right)\\
+    =& \mathbb{E}\left[ \dfrac{ \big(  e(X)v_2(X,1)^2 + (1-e(X)) v_2(X,0)^2 \big) }{ e(X)(1-e(X)) }  \right] \\
+    =& \mathbb{E}\left[ \dfrac{ v_2(X,1)^2 }{ 1-e(X) } \right] + \mathbb{E}\left[ \dfrac{ v_2(X,0)^2 }{ e(X) } \right]
+\end{align*}
 
 \subsection{}
 
 
+Note that, given $ X=x $, we have
+\begin{align*}
+    \sigma ^2_{\mathrm{ ps },x} =&\left( \dfrac{ v_2(x,1)^2 }{ 1-e(x) } + \dfrac{ v_2(x,0)^2 }{ e(x) }\right) \cdot (1-e(x) + e(x))
+    \mathop{ \geq  }\limits^{\mathrm{ Cauchy-Schwarz }}& (v_2(x,1) + v_2(x,0))^2  
+\end{align*}
+which takes the minimum when 
+\begin{align*}
+    \dfrac{ v_2(x,1) }{ 1-e(x) } = \dfrac{ v_2(x,0) }{ e(x) } \mathop{ \Rightarrow  } e(x) = \dfrac{ v_2(x,0) }{ v_2(x,0) + v_2(x,1) }
+\end{align*}
+which is the optimal propensity score chosen to minimize the variance of the propensity score weighted estimator.
+
+One sentence intuition: the choice of propensity score should balance variance within two groups w.r.t. the covariate $ X $, i.e. similar to the idea to avoiding simpson's paradox. Thus this method can lead to significant improvement over the naive randomized experiment estimator when we do have a good covariate $ X $ to work with.
+
+
 \section{Logistic regression}
+
+For logistic regression, we have
+\begin{align*}
+    \ell(\theta ):=\text{ log-likelihood }(\theta )=& \dfrac{ 1 }{ n } \sum_{i=1}^n Y_i\log \pi_\theta (X_i) + (1-Y_i)\log (1-\pi_\theta (X_i)),\quad \pi_\theta (X) = \dfrac{ 1 }{ 1+\exp(-\theta' X) }\\
+    \dfrac{\partial^{2} \ell }{\partial \theta \partial \theta ' }=& \dfrac{ 1 }{ n }\sum_{i=1}^n \dfrac{ \exp(-\theta' X_i) }{ (1+\exp(-\theta' X_i))^2 } X_iX_i' \\
+    I(\theta ):=&\mathbb{E}\left[ \dfrac{ \exp(-\theta' X_i) }{ (1+\exp(-\theta' X_i))^2 } X_iX_i' \right] 
+\end{align*}
+We have convergence of $ \hat{\theta }_n = \mathop{ \arg\max  }\limits_{\theta } \ell(\theta ) $ that:
+\begin{align*}
+    \sqrt{n}(\hat{\theta }_n-\theta ) \xrightarrow[]{\mathrm{d}} N(0, I(\theta )^{-1})
+\end{align*}
+
+
+
 
 
 
